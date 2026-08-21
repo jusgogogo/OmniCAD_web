@@ -31,3 +31,20 @@ The implementation mirrors the reference site: a shared Three.js WebGL canvas, `
 2. Optionally add the five GLBs documented in `models/README.md`.
 3. Replace `https://omnicad.example/` in `sitemap.xml` with the production domain.
 4. If a public arXiv/DOI becomes available, add it to the header/nav/citation metadata.
+
+
+## Qualitative video
+
+The qualitative-results section now uses one full-width MP4 containing all cases.
+Place the final video at:
+
+`public/media/3D-interaction.mp4`
+
+Recommended web export: H.264 MP4, at least 2560 px wide for a wide composite, CRF 18–22, muted/loop-ready. The existing `qualitative-results.png` is used as the poster/fallback until the MP4 is supplied.
+
+All paper figures are displayed without CSS color filters, inversion, hue rotation, or blend-mode recoloring.
+
+
+## Qualitative video
+
+Place the web-ready qualitative video at `public/media/3D-interaction.mp4`. Recommended encode: 5120×960 H.264, CRF 16, yuv420p, faststart. The page uses the original aspect ratio without cropping.

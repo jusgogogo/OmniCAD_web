@@ -454,167 +454,6 @@
     #benchmark .card>img{filter:none;mix-blend-mode:normal;background:#fff;transition:filter .2s ease}
     body:not(.bright) #benchmark .card>img{filter:invert(.9) hue-rotate(180deg) brightness(1.12) saturate(1.18) contrast(1.06);background:transparent}
   </style>
-<script type="module">
-    import * as THREE from "https://esm.sh/three@0.170.0";
-    import { GLTFLoader } from "https://esm.sh/three@0.170.0/examples/jsm/loaders/GLTFLoader.js";
-    import { OrbitControls } from "https://esm.sh/three@0.170.0/examples/jsm/controls/OrbitControls.js";
-    import { RoomEnvironment } from "https://esm.sh/three@0.170.0/examples/jsm/environments/RoomEnvironment.js";
-
-    const canvas = document.createElement("canvas");
-    canvas.id = "shared-model-canvas";
-    canvas.setAttribute("aria-hidden", "true");
-    Object.assign(canvas.style, { position: "fixed", inset: "0", width: "100vw", height: "100vh", pointerEvents: "none", zIndex: "12" });
-    document.body.appendChild(canvas);
-
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
-    renderer.autoClear = false;
-
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    const environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    pmrem.dispose();
-    const loader = new GLTFLoader();
-    const views = [];
-    let isBrightTheme = document.body.classList.contains("bright");
-    let modelBackground = isBrightTheme ? 0xffffff : 0x071723;
-    const updateModelTheme = bright => {
-      isBrightTheme = bright;
-      modelBackground = bright ? 0xffffff : 0x071723;
-      views.forEach(view => view.materials?.forEach(material => {
-        material.color.setHex(bright ? 0x173f4b : 0x5593a1);
-        material.emissive.setHex(bright ? 0x031419 : 0x123f49);
-        material.emissiveIntensity = bright ? 0.12 : 0.46;
-        material.metalness = bright ? 0.38 : 0.24;
-        material.roughness = bright ? 0.38 : 0.32;
-      }));
-    };
-    window.addEventListener("omnicad-themechange", event => updateModelTheme(event.detail.bright));
-
-    document.querySelectorAll(".three-viewer").forEach(host => {
-      const scene = new THREE.Scene();
-      scene.environment = environment;
-      scene.add(new THREE.HemisphereLight(0xc8f6ff, 0x07121a, 2.2));
-      const key = new THREE.DirectionalLight(0xffffff, 4.2); key.position.set(4, 6, 5);
-      const fill = new THREE.DirectionalLight(0x58d9ff, 2.0); fill.position.set(-5, 2, 3);
-      const rim = new THREE.DirectionalLight(0x8fa8ff, 2.6); rim.position.set(1, 4, -5);
-      scene.add(key, fill, rim);
-
-      const camera = new THREE.PerspectiveCamera(38, 1, 0.01, 1000);
-      const controls = new OrbitControls(camera, host);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.08;
-      controls.enablePan = false;
-
-      const pivot = new THREE.Group();
-      scene.add(pivot);
-      const view = { host, scene, camera, controls, pivot, materials: [], loadToken: 0, idle: true, resumeTimer: 0, loaded: false };
-      views.push(view);
-
-      const pause = () => { view.idle = false; clearTimeout(view.resumeTimer); };
-      const resume = () => { clearTimeout(view.resumeTimer); view.resumeTimer = setTimeout(() => view.idle = true, 1600); };
-      host.addEventListener("pointerdown", pause);
-      host.addEventListener("pointerup", resume);
-      host.addEventListener("pointercancel", resume);
-      host.addEventListener("wheel", () => { pause(); resume(); }, { passive: true });
-
-      const loadModel = src => {
-        const token = ++view.loadToken;
-        view.loaded = false;
-        while (pivot.children.length) pivot.remove(pivot.children[0]);
-        view.materials.forEach(item => item.dispose());
-        view.materials.length = 0;
-        host.querySelector(".model-placeholder")?.remove();
-        const placeholder = document.createElement("div");
-        placeholder.className = `model-placeholder${src ? "" : " is-failed"}`;
-        placeholder.innerHTML = src ? "Loading model..." : "3D ASSET<br>NOT PROVIDED";
-        host.appendChild(placeholder);
-        if (!src) return;
-        loader.load(src, gltf => {
-        if (token !== view.loadToken) return;
-        const model = gltf.scene;
-        const material = new THREE.MeshPhysicalMaterial({
-          color: isBrightTheme ? 0x173f4b : 0x5593a1,
-          emissive: isBrightTheme ? 0x031419 : 0x123f49,
-          emissiveIntensity: isBrightTheme ? 0.12 : 0.46,
-          metalness: isBrightTheme ? 0.38 : 0.24,
-          roughness: isBrightTheme ? 0.38 : 0.32,
-          clearcoat: 0.55,
-          clearcoatRoughness: 0.2,
-          envMapIntensity: 1.5,
-          side: THREE.DoubleSide
-        });
-        model.traverse(node => {
-          if (!node.isMesh) return;
-          node.geometry.computeVertexNormals();
-          node.geometry.normalizeNormals();
-          node.material = material.clone();
-          view.materials.push(node.material);
-        });
-        const box = new THREE.Box3().setFromObject(model);
-        const center = box.getCenter(new THREE.Vector3());
-        model.position.sub(center);
-        pivot.add(model);
-        const radius = box.getBoundingSphere(new THREE.Sphere()).radius || 1;
-        const distance = radius / Math.sin(THREE.MathUtils.degToRad(camera.fov * 0.5)) * 1.35;
-        camera.position.copy(new THREE.Vector3(1.2, 0.85, 1.6).normalize().multiplyScalar(distance));
-        camera.near = Math.max(radius / 100, 0.001);
-        camera.far = radius * 100;
-        camera.updateProjectionMatrix();
-        controls.minDistance = radius * 1.1;
-        controls.maxDistance = radius * 8;
-        controls.update();
-        view.loaded = true;
-        host.querySelector(".model-placeholder")?.remove();
-      }, undefined, () => {
-          if (token !== view.loadToken) return;
-          const placeholder = host.querySelector(".model-placeholder");
-          if (placeholder) {
-            placeholder.classList.add("is-failed");
-            placeholder.innerHTML = "3D ASSET<br>NOT PROVIDED";
-          }
-        });
-      };
-      view.loadModel = loadModel;
-      loadModel(host.dataset.src);
-    });
-    window.omniModelViews = views;
-    window.dispatchEvent(new Event("omniviewsready"));
-
-    function render() {
-      requestAnimationFrame(render);
-      const width = innerWidth;
-      const height = innerHeight;
-      renderer.setSize(width, height, false);
-      renderer.setScissorTest(false);
-      renderer.setClearColor(0x000000, 0);
-      renderer.clear(true, true, true);
-      renderer.setScissorTest(true);
-
-      views.forEach(view => {
-        const rect = view.host.getBoundingClientRect();
-        if (!view.loaded || rect.bottom <= 0 || rect.top >= height || rect.right <= 0 || rect.left >= width) return;
-        const left = Math.max(0, rect.left);
-        const right = Math.min(width, rect.right);
-        const top = Math.max(0, rect.top);
-        const bottom = Math.min(height, rect.bottom);
-        const viewWidth = Math.max(1, right - left);
-        const viewHeight = Math.max(1, bottom - top);
-        view.camera.aspect = rect.width / rect.height;
-        view.camera.updateProjectionMatrix();
-        if (view.idle) view.pivot.rotation.y += 0.006;
-        view.controls.update();
-        renderer.setViewport(left, height - bottom, viewWidth, viewHeight);
-        renderer.setScissor(left, height - bottom, viewWidth, viewHeight);
-        renderer.setClearColor(modelBackground, 1);
-        renderer.clear(true, true, true);
-        renderer.render(view.scene, view.camera);
-      });
-    }
-    render();
-  </script>
 <style>
   .paper-meta{margin-top:18px;color:#8eb4c3;font:700 11px/1.7 "Courier New",monospace;letter-spacing:.06em;text-transform:uppercase}
   body.bright .paper-meta{color:#557582}
@@ -648,12 +487,67 @@
   @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.model-matrix.omnicad-models{grid-template-columns:repeat(5,220px)}.finding-grid{grid-template-columns:1fr}.metrics-row.four{grid-template-columns:1fr 1fr}}
   @media(max-width:560px){.stats{grid-template-columns:1fr}.metrics-row.four{grid-template-columns:1fr}.hero h2{font-size:25px}}
 </style>
+
+<style>
+  /* OmniCAD visual alignment: preserve OmniLayout typography while keeping hierarchy balanced. */
+  h1,h2,.eyebrow,.kicker,.stat span,.paper-meta,.showcase-static figcaption,.asset-note,.institutions span{
+    text-transform:none !important;
+  }
+  h1{font-size:clamp(54px,5.4vw,74px) !important;line-height:.98 !important;letter-spacing:-.055em !important;}
+  h2{font-size:clamp(32px,3.6vw,48px) !important;line-height:1.08 !important;letter-spacing:-.04em !important;}
+  .hero h2{font-size:clamp(24px,2.35vw,34px) !important;line-height:1.16 !important;letter-spacing:-.03em !important;}
+  .eyebrow,.kicker{font-size:12px !important;letter-spacing:.06em !important;}
+  .copy{font-size:15px !important;line-height:1.72 !important;}
+
+  /* Keep every supplied paper figure in its authored colors. */
+  img,body.bright img,body:not(.bright) img{
+    filter:none !important;
+    mix-blend-mode:normal !important;
+    opacity:1 !important;
+  }
+  #benchmark .card>img,body:not(.bright) #benchmark .card>img,
+  .framework-card img,body:not(.bright) .framework-card img,
+  .metric-figure img,body:not(.bright) .metric-figure img{
+    filter:none !important;
+    mix-blend-mode:normal !important;
+    opacity:1 !important;
+  }
+
+  /* One large MP4 replaces the multi-card 3D viewer. */
+  .showcase-head{grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr) !important;gap:56px !important;margin-bottom:38px !important;}
+  .qualitative-video-wrap{margin:0;border:1px solid #244455;background:#071723;overflow:hidden;}
+  .qualitative-video{display:block;width:100%;height:auto;background:#071723;}
+  body.bright .qualitative-video-wrap{border-color:#a9cbd1;background:#fff;}
+
+  /* Dataset statistics: compact text hierarchy above a balanced 2x2 figure grid. */
+  .results.metrics-results{display:block !important;}
+  .metrics-intro{display:grid !important;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr) !important;gap:58px !important;align-items:end !important;margin:0 0 38px !important;}
+  .metrics-intro .kicker{margin-bottom:18px !important;}
+  .metrics-intro h2{font-size:clamp(30px,3.15vw,44px) !important;line-height:1.1 !important;letter-spacing:-.035em !important;max-width:720px !important;}
+  .metrics-intro .copy{margin:0 !important;max-width:520px;}
+  .metrics-table{display:block !important;background:transparent !important;border:0 !important;}
+  .metrics-row.four{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:14px !important;background:transparent !important;}
+  .metric-figure{border:1px solid var(--line) !important;background:#fff !important;overflow:hidden;}
+  .metric-figure img{width:100% !important;height:auto !important;max-height:none !important;aspect-ratio:auto !important;object-fit:contain !important;background:#fff !important;}
+  .metric-figure figcaption{text-transform:none !important;font-size:10px !important;letter-spacing:.04em !important;}
+
+  @media(max-width:900px){
+    .showcase-head,.metrics-intro{grid-template-columns:1fr !important;gap:20px !important;}
+    .metrics-row.four{grid-template-columns:1fr 1fr !important;}
+  }
+  @media(max-width:560px){
+    h1{font-size:48px !important;}
+    h2,.metrics-intro h2{font-size:30px !important;}
+    .metrics-row.four{grid-template-columns:1fr !important;}
+  }
+</style>
+
 </head>
 <body>
   <nav class="nav shell">
     <a class="wordmark" href="#top">OmniCAD</a>
     <div class="navlinks">
-      <a href="#showcase">3D Showcase</a>
+      <a href="#showcase">Qualitative Results</a>
       <a href="#benchmark">Benchmark</a>
       <a href="#tasks">Tasks</a>
       <a href="#direct-results">Direct Results</a>
@@ -698,23 +592,16 @@
 
     <section class="section showcase" id="showcase">
       <div class="shell">
-        <div class="kicker light">Tested upon state-of-the-art LMMs</div>
+        <div class="kicker light">Qualitative results</div>
         <div class="showcase-head">
-          <h2>Qualitative Results</h2>
-          <p class="copy">The supplied paper and supplementary package provide rendered qualitative comparisons but no per-sample GLB/GLTF assets. The static comparison is included below; the interactive slots are fully wired and intentionally left asset-empty.</p>
+          <h2>Qualitative assembly examples</h2>
+          <p class="copy">Representative OmniCAD cases are presented in one continuous full-width video, keeping visual scale and comparison layout consistent across examples. The video preserves the original rendering colors and can be viewed full-screen for fine assembly details.</p>
         </div>
-        <figure class="showcase-static">
-          <img src="./public/media/qualitative-results.png" alt="OmniCAD qualitative comparison across models and human engineer">
-          <figcaption>Supplementary visualization samples: disassembled components, ground truth, model predictions, and human-engineer reference.</figcaption>
+        <figure class="qualitative-video-wrap">
+          <video class="qualitative-video" autoplay loop muted playsinline controls preload="metadata" poster="./public/media/qualitative-results.png" aria-label="OmniCAD qualitative assembly examples">
+            <source src="./public/media/3D-interaction.mp4" type="video/mp4">
+          </video>
         </figure>
-        <div class="asset-note"><strong>3D interaction:</strong> same approach as the reference site — Three.js + GLTFLoader + OrbitControls, with drag-to-orbit and wheel/pinch zoom. Add the documented GLB filenames under <code>models/</code>; the cards below will load them automatically.</div>
-        <div class="model-matrix omnicad-models" aria-label="Interactive 3D model slots">
-          <article class="model-card gt"><div class="model-label">Ground Truth</div><div class="three-viewer" data-src="./models/case-01-gt.glb"></div></article>
-          <article class="model-card"><div class="model-label">GPT-5.5</div><div class="three-viewer" data-src="./models/case-01-gpt55.glb"></div></article>
-          <article class="model-card"><div class="model-label">Gemini 3.1 Pro</div><div class="three-viewer" data-src="./models/case-01-gemini31.glb"></div></article>
-          <article class="model-card"><div class="model-label">Claude Opus 4.8</div><div class="three-viewer" data-src="./models/case-01-claude48.glb"></div></article>
-          <article class="model-card"><div class="model-label">Qwen3.7-Plus</div><div class="three-viewer" data-src="./models/case-01-qwen37.glb"></div></article>
-        </div>
       </div>
     </section>
 
