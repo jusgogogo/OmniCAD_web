@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://omnicad.example/sitemap.xml
