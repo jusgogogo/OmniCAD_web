@@ -488,57 +488,39 @@
   @media(max-width:560px){.stats{grid-template-columns:1fr}.metrics-row.four{grid-template-columns:1fr}.hero h2{font-size:25px}}
 </style>
 
-<style>
-  /* OmniCAD visual alignment: preserve OmniLayout typography while keeping hierarchy balanced. */
-  h1,h2,.eyebrow,.kicker,.stat span,.paper-meta,.showcase-static figcaption,.asset-note,.institutions span{
-    text-transform:none !important;
-  }
-  h1{font-size:clamp(54px,5.4vw,74px) !important;line-height:.98 !important;letter-spacing:-.055em !important;}
-  h2{font-size:clamp(32px,3.6vw,48px) !important;line-height:1.08 !important;letter-spacing:-.04em !important;}
-  .hero h2{font-size:clamp(24px,2.35vw,34px) !important;line-height:1.16 !important;letter-spacing:-.03em !important;}
-  .eyebrow,.kicker{font-size:12px !important;letter-spacing:.06em !important;}
-  .copy{font-size:15px !important;line-height:1.72 !important;}
 
-  /* Keep every supplied paper figure in its authored colors. */
-  img,body.bright img,body:not(.bright) img{
-    filter:none !important;
-    mix-blend-mode:normal !important;
-    opacity:1 !important;
-  }
-  #benchmark .card>img,body:not(.bright) #benchmark .card>img,
-  .framework-card img,body:not(.bright) .framework-card img,
-  .metric-figure img,body:not(.bright) .metric-figure img{
-    filter:none !important;
-    mix-blend-mode:normal !important;
-    opacity:1 !important;
-  }
 
-  /* One large MP4 replaces the multi-card 3D viewer. */
-  .showcase-head{grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr) !important;gap:56px !important;margin-bottom:38px !important;}
+<style id="omnicad-layout-fidelity">
+  /* Keep OmniLayout geometry/typography; only adapt content-specific details requested for OmniCAD. */
+  h1,h2{ text-transform:none !important; }
+  .hero h2{font-size:clamp(23px,2.25vw,34px);line-height:1.14;letter-spacing:-.035em;font-weight:400;margin:0;max-width:720px;text-shadow:0 2px 18px #000;}
+  .hero-authors{max-width:740px;margin:17px 0 0;color:#c0d4de;font:10.5px/1.55 "Courier New",monospace;text-shadow:0 2px 12px #000;}
+  .hero-affiliations{max-width:720px;margin:8px 0 0;color:#83a7b7;font:9.5px/1.5 "Courier New",monospace;text-shadow:0 2px 12px #000;}
+  .hero .actions{margin-top:20px;}
+  body.bright .hero h2{color:#102f3d;text-shadow:0 2px 18px #fff;}
+  body.bright .hero-authors{color:#365f6e;text-shadow:0 2px 12px #fff;}
+  body.bright .hero-affiliations{color:#557582;text-shadow:0 2px 12px #fff;}
+
+  /* User-supplied paper figures/videos must retain authored colors. */
+  img,body.bright img,body:not(.bright) img{filter:none !important;mix-blend-mode:normal !important;opacity:1 !important;}
+  #benchmark .card>img,body:not(.bright) #benchmark .card>img,.framework-card img,body:not(.bright) .framework-card img,.metric-figure img,body:not(.bright) .metric-figure img{filter:none !important;mix-blend-mode:normal !important;opacity:1 !important;}
+
+  /* Qualitative Placement Examples is replaced by one full-width MP4 only; surrounding layout stays OmniLayout. */
   .qualitative-video-wrap{margin:0;border:1px solid #244455;background:#071723;overflow:hidden;}
   .qualitative-video{display:block;width:100%;height:auto;background:#071723;}
   body.bright .qualitative-video-wrap{border-color:#a9cbd1;background:#fff;}
 
-  /* Dataset statistics: compact text hierarchy above a balanced 2x2 figure grid. */
-  .results.metrics-results{display:block !important;}
-  .metrics-intro{display:grid !important;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr) !important;gap:58px !important;align-items:end !important;margin:0 0 38px !important;}
-  .metrics-intro .kicker{margin-bottom:18px !important;}
-  .metrics-intro h2{font-size:clamp(30px,3.15vw,44px) !important;line-height:1.1 !important;letter-spacing:-.035em !important;max-width:720px !important;}
-  .metrics-intro .copy{margin:0 !important;max-width:520px;}
-  .metrics-table{display:block !important;background:transparent !important;border:0 !important;}
-  .metrics-row.four{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:14px !important;background:transparent !important;}
-  .metric-figure{border:1px solid var(--line) !important;background:#fff !important;overflow:hidden;}
-  .metric-figure img{width:100% !important;height:auto !important;max-height:none !important;aspect-ratio:auto !important;object-fit:contain !important;background:#fff !important;}
-  .metric-figure figcaption{text-transform:none !important;font-size:10px !important;letter-spacing:.04em !important;}
+  /* OmniCAD has four dataset-statistics figures; keep OmniLayout mosaic sizing. */
+  .metrics-row.four{grid-template-columns:repeat(4,1fr);}
+  .metrics-row.four .metric-figure img{max-height:none;object-fit:contain;}
+  .metrics-intro h2{font-size:clamp(32px,3.5vw,50px);line-height:1.05;}
 
   @media(max-width:900px){
-    .showcase-head,.metrics-intro{grid-template-columns:1fr !important;gap:20px !important;}
-    .metrics-row.four{grid-template-columns:1fr 1fr !important;}
+    .hero-authors{font-size:10px}.hero-affiliations{font-size:9px}
+    .metrics-row.four{grid-template-columns:repeat(2,1fr);}
   }
   @media(max-width:560px){
-    h1{font-size:48px !important;}
-    h2,.metrics-intro h2{font-size:30px !important;}
-    .metrics-row.four{grid-template-columns:1fr !important;}
+    .hero h2{font-size:24px}.hero-authors{font-size:9.5px;line-height:1.45}.hero-affiliations{font-size:8.5px}.metrics-row.four{grid-template-columns:1fr;}
   }
 </style>
 
@@ -563,30 +545,20 @@
   <main>
     <section class="hero shell" id="top">
       <div>
-        <div class="eyebrow">Industrial CAD assembly reasoning</div>
         <h1>OmniCAD</h1>
         <h2>A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies</h2>
-        <p class="lede">Recover physically plausible mechanical assemblies from multimodal evidence: identify component instances, estimate 6-DoF poses, reconstruct mate graphs, and iteratively refine predictions with diagnostic tools.</p>
+        <p class="hero-authors">Mingjia Wang* · Taiting Lu* · Ziwei Dong · Sisong Bei · Jingying Zeng · Runze Liu · Kaiyuan Lin · Hongxing Pan · Kai Zhang · Yizheng Hou · Yangshoudu Zheng · Chenchen Guo · Weiyuan Meng · Shubin Lyu · Zhijun Zheng · Dexu Wang · Xinyu Bai · Shurui Qian · Zhangzixin · Mengyu Pan · Guoliang Shi · Ling Ma · Yifan Yang · Qi He · Yi-Chao Chen · Yincheng Jin · Sung-Liang Chen† · Mahanth Gowda†</p>
+        <p class="hero-affiliations">Shanghai Jiao Tong University · Pennsylvania State University · Independent Researcher · Microsoft Research · Binghamton University</p>
         <div class="actions">
           <a class="button" href="./public/omnicad-paper.pdf" download="omnicad-paper.pdf">Download paper ↓</a>
           <a class="button dataset-button" href="./res/omnicad_samples.zip" download>Dataset Samples ↓</a>
           <a class="button dataset-button" href="./res/omnicad_code.zip" download>Code ↓</a>
         </div>
-        <div class="paper-meta">25K assemblies · 300K component instances · 196K unique parts · 289K mate relations</div>
       </div>
       <div class="heroart">
         <img src="./public/media/overview.png" alt="OmniCAD industrial assembly benchmark overview">
         <div class="badge b1">25K<small>assemblies</small></div>
-        <div class="badge b2">21<small>mate types</small></div>
-      </div>
-    </section>
-
-    <section class="statsband">
-      <div class="shell stats">
-        <div class="stat"><strong>25K</strong><span>real-world<br>CAD assemblies</span></div>
-        <div class="stat"><strong>300K</strong><span>component<br>instances</span></div>
-        <div class="stat"><strong>196K</strong><span>unique library<br>parts</span></div>
-        <div class="stat"><strong>289K</strong><span>component-level<br>mate relations</span></div>
+        <div class="badge b2">289K<small>mate relations</small></div>
       </div>
     </section>
 
@@ -627,7 +599,7 @@
 
     <section class="section dark" id="tasks">
       <div class="shell">
-        <div class="kicker light">Four evaluation tracks</div>
+        <div class="kicker light">Three evaluation tracks</div>
         <div class="taskhead">
           <h2>From part selection to constraint-aware refinement.</h2>
           <p class="copy">The benchmark separates component identity, spatial placement, relational structure, and iterative tool use so that failure modes remain measurable rather than collapsing into a single end metric.</p>
