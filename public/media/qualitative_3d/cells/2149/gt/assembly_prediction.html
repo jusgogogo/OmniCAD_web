@@ -1,0 +1,255 @@
+<!doctype html>
+<html><head><meta charset='utf-8'><title>CAD assembly prediction</title>
+<script src='../../../assets/plotly.min.js'></script>
+<style>
+body{margin:0;font-family:Arial,sans-serif;display:block;height:100vh;color:#222;overflow:hidden}
+#viewer{flex:1;min-width:0} #plot{width:100%;height:100vh}
+#panel{display:none!important}
+h2,h3{margin:0 0 10px 0} label{display:block;font-size:12px;color:#444;margin-top:6px}
+input,select{width:100%;box-sizing:border-box;padding:5px 6px;border:1px solid #d0d0d0;border-radius:4px;font-size:12px}
+button{margin-top:8px;padding:6px 10px;border:1px solid #bbb;border-radius:4px;background:white;cursor:pointer}
+pre{white-space:pre-wrap;word-break:break-word;font-size:12px;background:#fff;border:1px solid #e3e3e3;border-radius:6px;padding:10px}
+.hint{font-size:13px;color:#666;line-height:1.4;margin-bottom:12px}
+</style></head>
+<body><div id='viewer'><div id='plot'></div></div>
+<div id='panel'>
+<h2>Assembly Control</h2>
+<div class='hint' style='display:none'>No mate lines are drawn here. Use global rotation/scale for the page view, or edit a component's position/orientation.</div>
+<label>global rotation_deg [rx,ry,rz]</label><input id='rotation_deg' value='0,0,0'>
+<label>scale / camera zoom</label><input id='scale' value='1'>
+<button onclick='applyViewPoseFromInputs()'>Apply View Pose</button>
+<button onclick='resetViewPose()'>Reset View</button>
+<h3>Component Pose</h3>
+<select id='component_select'></select>
+<label>position [x,y,z] mm</label><input id='component_position' value='0,0,0'>
+<label>orientation [rx,ry,rz] deg</label><input id='component_orientation' value='0,0,0'>
+<button onclick='applyComponentPoseFromInputs()'>Apply Component Pose</button>
+<button onclick='resetComponentPose()'>Reset Component</button>
+<h3>Current View Pose</h3><pre id='view_pose'></pre>
+<h3>Selected Component</h3><pre id='component_info'>No component selected.</pre>
+<h3>All Components</h3><pre id='all_components'></pre>
+</div><script src='./plot_data_part1.js'></script>
+<script src='./plot_data_part2.js'></script>
+<script src='./plot_data_part3.js'></script>
+<script>
+const data = [].concat(window.__omnicadPlotDataPart1||[],window.__omnicadPlotDataPart2||[],window.__omnicadPlotDataPart3||[])
+const componentIndex = [{"component_id": "c00001", "component_name": "c00001", "position": {"x": -99.49194865753933, "y": -25.26164504681612, "z": 1.078583452570755}, "orientation": {"rx": -0.009839, "ry": 0.044172, "rz": -12.557604}, "trace_index": 0}, {"component_id": "c00002", "component_name": "c00002", "position": {"x": 68.03982659943067, "y": -19.657713862736525, "z": -147.04501132334866}, "orientation": {"rx": 179.995435, "ry": -0.045024, "rz": -174.21071}, "trace_index": 1}, {"component_id": "c00003", "component_name": "c00003", "position": {"x": -369.9618472250967, "y": 1447.1020157549021, "z": -0.15779768929981286}, "orientation": {"rx": -0.034763, "ry": -0.028974, "rz": -129.810222}, "trace_index": 2}, {"component_id": "c00004", "component_name": "c00004", "position": {"x": -369.9618472250964, "y": 1447.102015754902, "z": -0.1577976892943589}, "orientation": {"rx": -90.034763, "ry": -0.028974, "rz": -129.810222}, "trace_index": 3}, {"component_id": "c00005", "component_name": "c00005", "position": {"x": 6.079207219087124e-13, "y": -0.9999999999997112, "z": -5.718602312213682e-13}, "orientation": {"rx": 0.0, "ry": 0.045255, "rz": 0.0}, "trace_index": 4}, {"component_id": "c00007", "component_name": "c00007", "position": {"x": 0.0, "y": 0.0, "z": 0.0}, "orientation": {"rx": 0.0, "ry": -0.0, "rz": 0.0}, "trace_index": 5}, {"component_id": "c00008", "component_name": "c00008", "position": {"x": -193.34445897893494, "y": 1114.7871540888814, "z": 0.20270224329880665}, "orientation": {"rx": -0.004565, "ry": -0.045024, "rz": -174.21071}, "trace_index": 6}];
+const initialViewPose = {rotation_deg:[0,0,0], scale:1, internal_rotation_center_mm:[303.750001, 620.552125, 215.800001], bounds_mm:[-5.896419210671411e-06, 5.718984539271332e-07, -3.5497301289488803e-06, 607.5000086272696, 1241.1042499621828, 431.60000613225975]};
+let currentViewPose = JSON.parse(JSON.stringify(initialViewPose));
+const layout = {paper_bgcolor:'#ffffff', plot_bgcolor:'#ffffff', scene: {bgcolor:'#ffffff', aspectmode:'data', xaxis:{visible:false, showbackground:false, showgrid:false, zeroline:false, showticklabels:false, title:''}, yaxis:{visible:false, showbackground:false, showgrid:false, zeroline:false, showticklabels:false, title:''}, zaxis:{visible:false, showbackground:false, showgrid:false, zeroline:false, showticklabels:false, title:''}, camera:{eye:{x:-1.55,y:1.55,z:-1.25}}}, margin: {l:0,r:0,t:0,b:0}, showlegend:false};
+const config = {responsive:true, displaylogo:false, displayModeBar:false};
+const originalMeshes = data.map(trace => ({x: trace.x.slice(), y: trace.y.slice(), z: trace.z.slice()}));
+const componentPoseState = {};
+
+
+function buildEdgeTracesFromCurrentMeshes() {
+  const traces = [];
+  const plotEl = document.getElementById('plot');
+  const meshData = (plotEl && plotEl.data) ? plotEl.data : data;
+  for (const trace of meshData) {
+    if (!trace || trace.type !== 'mesh3d' || !trace.x || !trace.i) continue;
+    const edgeFaces = new Map();
+    const faceNormals = [];
+    function normalForFace(a, b, c) {
+      const ax = trace.x[a], ay = trace.y[a], az = trace.z[a];
+      const bx = trace.x[b], by = trace.y[b], bz = trace.z[b];
+      const cx = trace.x[c], cy = trace.y[c], cz = trace.z[c];
+      const ux = bx - ax, uy = by - ay, uz = bz - az;
+      const vx = cx - ax, vy = cy - ay, vz = cz - az;
+      let nx = uy * vz - uz * vy;
+      let ny = uz * vx - ux * vz;
+      let nz = ux * vy - uy * vx;
+      const len = Math.hypot(nx, ny, nz) || 1;
+      return [nx / len, ny / len, nz / len];
+    }
+    function registerEdge(a, b, faceIdx) {
+      if (a === b || a == null || b == null) return;
+      const lo = Math.min(a, b), hi = Math.max(a, b);
+      const key = lo + ':' + hi;
+      if (!edgeFaces.has(key)) edgeFaces.set(key, []);
+      const list = edgeFaces.get(key);
+      if (list.length < 3) list.push(faceIdx);
+    }
+    for (let idx = 0; idx < trace.i.length; idx++) {
+      const a = trace.i[idx], b = trace.j[idx], c = trace.k[idx];
+      faceNormals.push(normalForFace(a, b, c));
+      registerEdge(a, b, idx);
+      registerEdge(b, c, idx);
+      registerEdge(c, a, idx);
+    }
+    const candidateKeys = [];
+    const ex = [], ey = [], ez = [];
+    const faceCount = trace.i.length;
+    const maxEdges = faceCount > 120000 ? 5200 : (faceCount > 50000 ? 3400 : 1700);
+    const sharpCos = Math.cos(20 * Math.PI / 180);
+    function addEdgeByKey(key) {
+      const [lo, hi] = key.split(':').map(Number);
+      ex.push(trace.x[lo], trace.x[hi], null);
+      ey.push(trace.y[lo], trace.y[hi], null);
+      ez.push(trace.z[lo], trace.z[hi], null);
+    }
+    for (const [key, faces] of edgeFaces.entries()) {
+      let keep = faces.length === 1;
+      if (!keep && faces.length >= 2) {
+        const n1 = faceNormals[faces[0]], n2 = faceNormals[faces[1]];
+        const dot = n1[0] * n2[0] + n1[1] * n2[1] + n1[2] * n2[2];
+        keep = dot < sharpCos;
+      }
+      if (keep) candidateKeys.push(key);
+    }
+    if (candidateKeys.length <= maxEdges) {
+      for (const key of candidateKeys) addEdgeByKey(key);
+    } else {
+      const step = candidateKeys.length / maxEdges;
+      for (let n = 0; n < maxEdges; n++) {
+        addEdgeByKey(candidateKeys[Math.floor(n * step)]);
+      }
+    }
+    if (ex.length) {
+      traces.push({
+        type: 'scatter3d',
+        mode: 'lines',
+        x: ex, y: ey, z: ez,
+        hoverinfo: 'skip',
+        showlegend: false,
+        line: {color: 'rgba(23,33,43,0.30)', width: 1.6},
+        name: (trace.name || 'mesh') + '_edges'
+      });
+    }
+  }
+  return traces;
+}
+
+window.setAutoCamera = function(theta) {
+  const radius = 2.20;
+  return Plotly.relayout('plot', {'scene.camera.eye': {
+    x: radius * Math.cos(theta),
+    y: radius * Math.sin(theta),
+    z: -1.25
+  }});
+};
+
+function parseTriple(text, fallback) {
+  const values = String(text || '').split(',').map(v => Number(v.trim()));
+  if (values.length !== 3 || values.some(v => !Number.isFinite(v))) return fallback.slice();
+  return values;
+}
+function degToRad(v) { return v * Math.PI / 180.0; }
+function rotatePoint(p, center, rotationDeg) {
+  let x = p[0] - center[0], y = p[1] - center[1], z = p[2] - center[2];
+  let c = Math.cos(degToRad(rotationDeg[0])), s = Math.sin(degToRad(rotationDeg[0]));
+  let y1 = y * c - z * s, z1 = y * s + z * c; y = y1; z = z1;
+  c = Math.cos(degToRad(rotationDeg[1])); s = Math.sin(degToRad(rotationDeg[1]));
+  let x1 = x * c + z * s; z1 = -x * s + z * c; x = x1; z = z1;
+  c = Math.cos(degToRad(rotationDeg[2])); s = Math.sin(degToRad(rotationDeg[2]));
+  x1 = x * c - y * s; y1 = x * s + y * c; x = x1; y = y1;
+  return [x + center[0], y + center[1], z + center[2]];
+}
+function poseToRt(position, orientation) {
+  const p = position || {};
+  const o = orientation || {};
+  const t = [Number(p.x)||0, Number(p.y)||0, Number(p.z)||0];
+  const rx = degToRad(Number(o.rx)||0), ry = degToRad(Number(o.ry)||0), rz = degToRad(Number(o.rz)||0);
+  const cx=Math.cos(rx), sx=Math.sin(rx), cy=Math.cos(ry), sy=Math.sin(ry), cz=Math.cos(rz), sz=Math.sin(rz);
+  const R = [
+    [cz*cy, cz*sy*sx - sz*cx, cz*sy*cx + sz*sx],
+    [sz*cy, sz*sy*sx + cz*cx, sz*sy*cx - cz*sx],
+    [-sy, cy*sx, cy*cx]
+  ];
+  return {R,t};
+}
+function transformLocalPoint(p, pose) {
+  const rt = poseToRt(pose.position, pose.orientation);
+  return [
+    rt.R[0][0]*p[0]+rt.R[0][1]*p[1]+rt.R[0][2]*p[2]+rt.t[0],
+    rt.R[1][0]*p[0]+rt.R[1][1]*p[1]+rt.R[1][2]*p[2]+rt.t[1],
+    rt.R[2][0]*p[0]+rt.R[2][1]*p[1]+rt.R[2][2]*p[2]+rt.t[2]
+  ];
+}
+function refreshOneTrace(traceIndex, pose) {
+  const src = originalMeshes[traceIndex];
+  if (!src) return;
+  const nx=[], ny=[], nz=[];
+  for (let i=0; i<src.x.length; i++) {
+    const local = transformLocalPoint([src.x[i], src.y[i], src.z[i]], pose);
+    const global = rotatePoint(local, currentViewPose.internal_rotation_center_mm || [0,0,0], currentViewPose.rotation_deg);
+    nx.push(global[0]); ny.push(global[1]); nz.push(global[2]);
+  }
+  Plotly.restyle('plot', {x:[nx], y:[ny], z:[nz]}, [traceIndex]);
+}
+function refreshTrace(traceIndex) {
+  const pose = componentPoseState[traceIndex] || {position:{x:0,y:0,z:0}, orientation:{rx:0,ry:0,rz:0}};
+  refreshOneTrace(traceIndex, pose);
+  const item = componentIndex.find(c => c.trace_index === traceIndex);
+  if (item && Number.isInteger(item.edge_trace_index)) refreshOneTrace(item.edge_trace_index, pose);
+}
+window.setAssemblyViewPose = function(pose) {
+  currentViewPose = {
+    rotation_deg: Array.isArray(pose.rotation_deg) ? pose.rotation_deg.map(Number) : currentViewPose.rotation_deg.slice(),
+    scale: Number.isFinite(Number(pose.scale)) ? Number(pose.scale) : currentViewPose.scale,
+    internal_rotation_center_mm: initialViewPose.internal_rotation_center_mm,
+    bounds_mm: initialViewPose.bounds_mm
+  };
+  for (const item of componentIndex) refreshTrace(item.trace_index);
+  const zoom = Math.max(0.05, Number(currentViewPose.scale) || 1.0);
+  Plotly.relayout('plot', {'scene.camera.eye': {x:-1.55/zoom, y:1.55/zoom, z:-1.25/zoom}});
+  setViewInputs();
+  return currentViewPose;
+};
+window.setComponentPose = function(componentId, pose) {
+  const item = componentIndex.find(c => c.component_id === componentId);
+  if (!item) return null;
+  componentPoseState[item.trace_index] = {
+    position: {x:Number((pose.position||{}).x)||0, y:Number((pose.position||{}).y)||0, z:Number((pose.position||{}).z)||0},
+    orientation: {rx:Number((pose.orientation||{}).rx)||0, ry:Number((pose.orientation||{}).ry)||0, rz:Number((pose.orientation||{}).rz)||0}
+  };
+  refreshTrace(item.trace_index);
+  renderComponentInfo(item);
+  return componentPoseState[item.trace_index];
+};
+function setViewInputs() {
+  document.getElementById('rotation_deg').value = currentViewPose.rotation_deg.join(',');
+  document.getElementById('scale').value = String(currentViewPose.scale);
+  document.getElementById('view_pose').textContent = JSON.stringify({rotation_deg: currentViewPose.rotation_deg, scale: currentViewPose.scale, api:'window.setAssemblyViewPose({rotation_deg:[rx,ry,rz], scale:s})'}, null, 2);
+}
+function applyViewPoseFromInputs() { return window.setAssemblyViewPose({rotation_deg:parseTriple(document.getElementById('rotation_deg').value,[0,0,0]), scale:Number(document.getElementById('scale').value)}); }
+function resetViewPose() { return window.setAssemblyViewPose(initialViewPose); }
+function selectedComponent() { return componentIndex.find(c => c.component_id === document.getElementById('component_select').value); }
+function renderComponentInfo(item) {
+  if (!item) return;
+  const pose = componentPoseState[item.trace_index] || {position:{x:0,y:0,z:0}, orientation:{rx:0,ry:0,rz:0}};
+  document.getElementById('component_position').value = [pose.position.x, pose.position.y, pose.position.z].join(',');
+  document.getElementById('component_orientation').value = [pose.orientation.rx, pose.orientation.ry, pose.orientation.rz].join(',');
+    document.getElementById('component_info').textContent = JSON.stringify({...item, editable_pose:pose, api:'window.setComponentPose(componentId, {position:{x,y,z}, orientation:{rx,ry,rz}})'}, null, 2);
+}
+function applyComponentPoseFromInputs() {
+  const item = selectedComponent(); if (!item) return null;
+  const p = parseTriple(document.getElementById('component_position').value, [0,0,0]);
+  const r = parseTriple(document.getElementById('component_orientation').value, [0,0,0]);
+  return window.setComponentPose(item.component_id, {position:{x:p[0],y:p[1],z:p[2]}, orientation:{rx:r[0],ry:r[1],rz:r[2]}});
+}
+function resetComponentPose() {
+  const item = selectedComponent(); if (!item) return null;
+  return window.setComponentPose(item.component_id, {position:item.position || {x:0,y:0,z:0}, orientation:item.orientation || {rx:0,ry:0,rz:0}});
+}
+const select = document.getElementById('component_select');
+for (const c of componentIndex) {
+  const opt = document.createElement('option'); opt.value = c.component_id; opt.textContent = c.component_id + ' ' + (c.component_name || '');
+  select.appendChild(opt);
+  componentPoseState[c.trace_index] = {position:c.position || {x:0,y:0,z:0}, orientation:c.orientation || {rx:0,ry:0,rz:0}};
+}
+select.addEventListener('change', () => renderComponentInfo(selectedComponent()));
+document.getElementById('all_components').textContent = JSON.stringify(componentIndex, null, 2);
+setViewInputs();
+Plotly.newPlot('plot', data, layout, config).then(function(gd) {
+  for (const item of componentIndex) refreshTrace(item.trace_index);
+  gd.on('plotly_click', function(evt) {
+    if (!evt || !evt.points || !evt.points.length) return;
+    const item = componentIndex.find(c => c.trace_index === evt.points[0].curveNumber);
+    if (item) { select.value = item.component_id; renderComponentInfo(item); }
+  });
+  const edgeTraces = buildEdgeTracesFromCurrentMeshes();
+  if (edgeTraces.length) Plotly.addTraces(gd, edgeTraces);
+  renderComponentInfo(selectedComponent());
+});
+</script></body></html>

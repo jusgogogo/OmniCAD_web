@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CAD Assembly Plotly-like 3D Comparison</title>
+  <style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff;color:#1f2430;font-family:Arial,sans-serif}*{box-sizing:border-box}
+header{padding:10px 14px 9px;border-bottom:1px solid #e5e5e5}h1{margin:0;font-size:17px;line-height:1.25}p{margin:4px 0 0;color:#667085;font-size:11px;line-height:1.35}
+main{padding:10px 10px 12px;overflow:hidden}.case-row{display:grid;grid-template-columns:110px repeat(7,minmax(0,1fr));gap:6px;min-width:0;align-items:stretch;margin-bottom:7px;padding-bottom:7px;border-bottom:1px solid #e6e6e6}.case-row:last-child{margin-bottom:0;padding-bottom:0;border-bottom:0}
+.case-title{display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:700;line-height:1.2;white-space:pre-line;min-width:0}.card{min-width:0;background:#fff;border:1px solid #d9dee8;border-radius:7px;overflow:hidden}.label{text-align:center;font-size:11px;font-weight:700;line-height:1.15;padding:6px 3px;border-bottom:1px solid #e5e9f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.viewer{height:158px;position:relative;background:#f7f9fc;overflow:hidden}iframe{width:100%;height:100%;border:0;display:block;background:#fff;overflow:hidden}.no-output{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border:0;color:#555;font-size:16px;font-weight:700;text-align:center}
+@media(max-width:900px){.case-row{grid-template-columns:82px repeat(7,minmax(0,1fr));gap:4px}.case-title{font-size:11px}.label{font-size:9px;padding-inline:1px}.viewer{height:140px}}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Interactive 3D Comparison with Original Plotly Visual Style</h1>
+    <p>Drag to rotate, scroll to zoom, and pan inside each cell. This version reuses the original comparison renderer's mesh colors and lighting style.</p>
+  </header>
+  <main><section class='case-row'><div class='case-title'>2129
+Robotic Arm</div><article class='card'><div class='label'>Library parts</div><div class='viewer'><iframe src='cells/2129/library/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>GT</div><div class='viewer'><iframe src='cells/2129/gt/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>GPT-5.5 Pro</div><div class='viewer'><iframe src='cells/2129/gpt55/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>Gemini 3 Pro</div><div class='viewer'><iframe src='cells/2129/gemini31/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>Claude Opus 4.8</div><div class='viewer'><iframe src='cells/2129/claude48/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>Qwen3.7 Plus</div><div class='viewer'><iframe src='cells/2129/qwen37/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>Human Engineer</div><div class='viewer'><iframe src='cells/2129/gt/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article></section><section class='case-row'><div class='case-title'>2149
+SR10C</div><article class='card'><div class='label'>Library parts</div><div class='viewer'><iframe src='cells/2149/library/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>GT</div><div class='viewer'><iframe src='cells/2149/gt/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>GPT-5.5 Pro</div><div class='viewer'><div class='no-output'>NO OUTPUT</div></div></article><article class='card'><div class='label'>Gemini 3 Pro</div><div class='viewer'><div class='no-output'>NO OUTPUT</div></div></article><article class='card'><div class='label'>Claude Opus 4.8</div><div class='viewer'><div class='no-output'>NO OUTPUT</div></div></article><article class='card'><div class='label'>Qwen3.7 Plus</div><div class='viewer'><div class='no-output'>NO OUTPUT</div></div></article><article class='card'><div class='label'>Human Engineer</div><div class='viewer'><iframe src='cells/2149/gt/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article></section><section class='case-row'><div class='case-title'>2211
+Assem1</div><article class='card'><div class='label'>Library parts</div><div class='viewer'><iframe src='cells/2211/library/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>GT</div><div class='viewer'><iframe src='cells/2211/gt/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>GPT-5.5 Pro</div><div class='viewer'><iframe src='cells/2211/gpt55/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>Gemini 3 Pro</div><div class='viewer'><iframe src='cells/2211/gemini31/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>Claude Opus 4.8</div><div class='viewer'><iframe src='cells/2211/claude48/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article><article class='card'><div class='label'>Qwen3.7 Plus</div><div class='viewer'><div class='no-output'>NO OUTPUT</div></div></article><article class='card'><div class='label'>Human Engineer</div><div class='viewer'><iframe src='cells/2211/gt/assembly_prediction.html?v=20260822_v03_parent_rotate'></iframe></div></article></section></main>
+  <script>
+    const V03_THETA = Math.atan2(1.55, -1.55);
+    let theta = V03_THETA;
+    let lastTick = 0;
+    let startedAt = performance.now();
+    function isVisible(el) {
+      const r = el.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
+    }
+    function rotateVisible(now) {
+      requestAnimationFrame(rotateVisible);
+      if (now - startedAt < 2000) return;
+      if (now - lastTick < 90) return;
+      lastTick = now;
+      theta += 0.018;
+      for (const frame of document.querySelectorAll('iframe')) {
+        if (!isVisible(frame)) continue;
+        try {
+          if (frame.contentWindow && typeof frame.contentWindow.setAutoCamera === 'function') {
+            frame.contentWindow.setAutoCamera(theta);
+          }
+        } catch (err) {}
+      }
+    }
+    requestAnimationFrame(rotateVisible);
+  </script>
+</body>
+</html>
