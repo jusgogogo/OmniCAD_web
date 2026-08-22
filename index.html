@@ -502,11 +502,11 @@
      The benchmark overview is exempted below because it must keep the paper's authored colors. */
 
   /* Qualitative Placement Examples embeds the existing interactive 3D site; surrounding layout stays OmniLayout. */
-  .qualitative-3d-wrap{margin:0;width:100%;height:960px;border:1px solid #244455;background:#fff;overflow:hidden;}
-  .qualitative-3d-wrap iframe{display:block;width:100%;height:100%;border:0;background:#fff;}
+  .qualitative-3d-wrap{margin:0;width:100%;height:735px;border:1px solid #244455;background:#fff;overflow:hidden;}
+  .qualitative-3d-wrap iframe{display:block;width:100%;height:100%;border:0;background:#fff;overflow:hidden;}
   body.bright .qualitative-3d-wrap{border-color:#a9cbd1;background:#fff;}
-  @media(max-width:900px){.qualitative-3d-wrap{height:900px;}}
-  @media(max-width:560px){.qualitative-3d-wrap{height:860px;}}
+  @media(max-width:900px){.qualitative-3d-wrap{height:675px;}}
+  @media(max-width:560px){.qualitative-3d-wrap{height:650px;}}
 
   /* OmniCAD has four dataset-statistics figures; keep OmniLayout mosaic sizing. */
   .metrics-row.four{grid-template-columns:repeat(4,1fr);}
@@ -712,7 +712,8 @@
           <iframe
             src="./public/media/qualitative_3d/index.html"
             title="OmniCAD interactive qualitative assembly examples"
-            loading="lazy"
+            loading="eager"
+            scrolling="no"
             allowfullscreen
           ></iframe>
         </div>
