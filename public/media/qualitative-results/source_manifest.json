@@ -1,0 +1,137 @@
+{
+  "created_by": "D:\\Desktop\\samecolor_3samples_model_comparison_20260801\\build_omnimech_3d_site.py",
+  "note": "GT STEP files are copied directly. Prediction GLB files are assembled from mesh OBJ component library and assembly_prediction.json poses; prediction STEP is not available in the model outputs.",
+  "samples": [
+    {
+      "key": "2129",
+      "title": "2129 Robotic Arm",
+      "sample_name": "2129_01871_02497_Robotic_Arm_23ea8dcb",
+      "prepared_sample": "E:\\cad_assembly_3500_after_visual_dedupe_by_prt_distribution_complete_v2_20260720\\hardlinked_samples\\2129_01871_02497_Robotic_Arm_23ea8dcb",
+      "assets": {
+        "library": {
+          "glb": "models/2129_library_parts.glb",
+          "source_note": "component library OBJ"
+        },
+        "gt": {
+          "glb": "models/2129_ground_truth.glb",
+          "source_note": "GT pose + mesh OBJ",
+          "step": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_steps\\2129_2129_01871_02497_Robotic_Arm_23ea8dcb__ground_truth.step"
+        },
+        "human": {
+          "glb": "models/2129_ground_truth.glb",
+          "source_note": "same as GT",
+          "step": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_steps\\2129_2129_01871_02497_Robotic_Arm_23ea8dcb__ground_truth.step"
+        },
+        "gpt55": {
+          "glb": "models/2129_gpt55_prediction.glb",
+          "source_note": "prediction JSON + mesh OBJ",
+          "prediction_json": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_predictions\\2129_gpt55__assembly_prediction.json",
+          "original_prediction_json": "E:\\Oneshot_Selected2_OpenRouter_4Models_20260729\\gpt_5_5\\exp_zs_img\\2129_01871_02497_Robotic_Arm_23ea8dcb\\assembly_prediction.json"
+        },
+        "gemini31": {
+          "glb": "models/2129_gemini31_prediction.glb",
+          "source_note": "prediction JSON + mesh OBJ",
+          "prediction_json": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_predictions\\2129_gemini31__assembly_prediction.json",
+          "original_prediction_json": "E:\\Oneshot_SameColor_3Samples_MissingRerun_20260801\\gemini_3_1_pro_preview\\RawApiRun\\Exp1\\2129_01871_02497_Robotic_Arm_23ea8dcb__exp_baseline\\assembly_prediction.json"
+        },
+        "claude48": {
+          "glb": "models/2129_claude48_prediction.glb",
+          "source_note": "prediction JSON + mesh OBJ",
+          "prediction_json": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_predictions\\2129_claude48__assembly_prediction.json",
+          "original_prediction_json": "E:\\Oneshot_Selected2_OpenRouter_4Models_20260729\\claude_opus_4_8\\exp_zs_img\\2129_01871_02497_Robotic_Arm_23ea8dcb\\assembly_prediction.json"
+        },
+        "qwen37": {
+          "glb": "models/2129_qwen37_prediction.glb",
+          "source_note": "prediction JSON + mesh OBJ",
+          "prediction_json": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_predictions\\2129_qwen37__assembly_prediction.json",
+          "original_prediction_json": "E:\\Oneshot_Selected2_OpenRouter_4Models_20260729\\qwen3_7_plus\\exp_zs_img\\2129_01871_02497_Robotic_Arm_23ea8dcb\\assembly_prediction.json"
+        }
+      },
+      "ground_truth_step": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_steps\\2129_2129_01871_02497_Robotic_Arm_23ea8dcb__ground_truth.step"
+    },
+    {
+      "key": "2149",
+      "title": "2149 SR10C",
+      "sample_name": "2149_0215_prepared_3824__02541_SR10C_953609b4",
+      "prepared_sample": "E:\\cad_assembly_3500_after_visual_dedupe_by_prt_distribution_complete_v2_20260720\\hardlinked_samples\\2149_0215_prepared_3824__02541_SR10C_953609b4",
+      "assets": {
+        "library": {
+          "glb": "models/2149_library_parts.glb",
+          "source_note": "component library OBJ"
+        },
+        "gt": {
+          "glb": "models/2149_ground_truth.glb",
+          "source_note": "GT pose + mesh OBJ",
+          "step": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_steps\\2149_2149_0215_prepared_3824__02541_SR10C_953609b4__ground_truth.step"
+        },
+        "human": {
+          "glb": "models/2149_ground_truth.glb",
+          "source_note": "same as GT",
+          "step": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_steps\\2149_2149_0215_prepared_3824__02541_SR10C_953609b4__ground_truth.step"
+        },
+        "gpt55": {
+          "glb": null,
+          "source_note": "no prediction JSON"
+        },
+        "gemini31": {
+          "glb": null,
+          "source_note": "no prediction JSON"
+        },
+        "claude48": {
+          "glb": null,
+          "source_note": "no prediction JSON"
+        },
+        "qwen37": {
+          "glb": null,
+          "source_note": "no prediction JSON"
+        }
+      },
+      "ground_truth_step": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_steps\\2149_2149_0215_prepared_3824__02541_SR10C_953609b4__ground_truth.step"
+    },
+    {
+      "key": "2211",
+      "title": "2211 Assem1",
+      "sample_name": "2211_00712_00876_Assem1_45ed28d6",
+      "prepared_sample": "E:\\cad_assembly_3500_after_visual_dedupe_by_prt_distribution_complete_v2_20260720\\hardlinked_samples\\2211_00712_00876_Assem1_45ed28d6",
+      "assets": {
+        "library": {
+          "glb": "models/2211_library_parts.glb",
+          "source_note": "component library OBJ"
+        },
+        "gt": {
+          "glb": "models/2211_ground_truth.glb",
+          "source_note": "GT pose + mesh OBJ",
+          "step": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_steps\\2211_2211_00712_00876_Assem1_45ed28d6__ground_truth.step"
+        },
+        "human": {
+          "glb": "models/2211_ground_truth.glb",
+          "source_note": "same as GT",
+          "step": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_steps\\2211_2211_00712_00876_Assem1_45ed28d6__ground_truth.step"
+        },
+        "gpt55": {
+          "glb": "models/2211_gpt55_prediction.glb",
+          "source_note": "prediction JSON + mesh OBJ",
+          "prediction_json": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_predictions\\2211_gpt55__assembly_prediction.json",
+          "original_prediction_json": "E:\\Oneshot_Selected2_OpenRouter_4Models_20260729\\gpt_5_5\\exp_zs_img\\2211_00712_00876_Assem1_45ed28d6\\assembly_prediction.json"
+        },
+        "gemini31": {
+          "glb": "models/2211_gemini31_prediction.glb",
+          "source_note": "prediction JSON + mesh OBJ",
+          "prediction_json": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_predictions\\2211_gemini31__assembly_prediction.json",
+          "original_prediction_json": "E:\\Oneshot_Selected2_OpenRouter_4Models_20260729\\gemini_3_1_pro_preview\\exp_zs_img\\2211_00712_00876_Assem1_45ed28d6\\assembly_prediction.json"
+        },
+        "claude48": {
+          "glb": "models/2211_claude48_prediction.glb",
+          "source_note": "prediction JSON + mesh OBJ",
+          "prediction_json": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_predictions\\2211_claude48__assembly_prediction.json",
+          "original_prediction_json": "E:\\Oneshot_Selected2_OpenRouter_4Models_20260729\\claude_opus_4_8\\exp_zs_img\\2211_00712_00876_Assem1_45ed28d6\\assembly_prediction.json"
+        },
+        "qwen37": {
+          "glb": null,
+          "source_note": "no prediction JSON"
+        }
+      },
+      "ground_truth_step": "D:\\Desktop\\samecolor_3samples_omnimech_3d_site_20260822\\source_steps\\2211_2211_00712_00876_Assem1_45ed28d6__ground_truth.step"
+    }
+  ]
+}
