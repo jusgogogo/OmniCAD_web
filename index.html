@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="OmniCAD is a 25K-scale benchmark for assembly-aware 3D spatial reasoning across industrial mechanical systems.">
-  <meta name="keywords" content="OmniCAD, mechanical assembly, 3D spatial reasoning, VLM, mate graph, component pose, agentic assembly reasoning">
-  <meta name="author" content="Mingjia Wang*, Taiting Lu*, Ziwei Dong, Sisong Bei, Jingying Zeng, Runze Liu, Kaiyuan Lin, Hongxing Pan, Kai Zhang, Yizheng Hou, Yangshoudu Zheng, Chenchen Guo, Weiyuan Meng, Shubin Lyu, Zhijun Zheng, Dexu Wang, Xinyu Bai, Shurui Qian, Zhangzixin, Mengyu Pan, Guoliang Shi, Ling Ma, Yifan Yang, Qi He, Yi-Chao Chen, Yincheng Jin, Sung-Liang Chen†, Mahanth Gowda†">
+  <meta name="description" content="OmniCAD is a 25K-scale benchmark for industrial 3D CAD assembly reasoning, component identification, 6-DoF pose estimation, mate-graph reconstruction, and agentic assembly refinement.">
+  <meta name="keywords" content="OmniCAD, CAD assembly, 3D spatial reasoning, robotics assembly, vision-language models, component pose, mate graph, SolidWorks, agentic reasoning">
+  <meta name="author" content="Mingjia Wang, Taiting Lu, Ziwei Dong, Sisong Bei, Jingying Zeng, Runze Liu, Kaiyuan Lin, Hongxing Pan, Kai Zhang, Yizheng Hou, Yangshoudu Zheng, Chenchen Guo, Weiyuan Meng, Shubin Lyu, Zhijun Zheng, Dexu Wang, Xinyu Bai, Shurui Qian, Zhangzixin, Mengyu Pan, Guoliang Shi, Ling Ma, Yifan Yang, Qi He, Yi-Chao Chen, Yincheng Jin, Sung-Liang Chen, Mahanth Gowda">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta property="og:site_name" content="OmniCAD">
   <meta property="og:title" content="OmniCAD | 3D Spatial Reasoning in Robotics Assemblies">
-  <meta property="og:description" content="A 25K-scale benchmark for component-level 3D spatial reasoning, mate-graph reasoning, and tool-augmented agentic assembly reasoning.">
+  <meta property="og:description" content="A large-scale industrial CAD assembly benchmark with 25K assemblies, 300K component instances, and 289K mate relations.">
   <meta property="og:type" content="article">
   <meta property="og:image" content="./public/media/overview.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="OmniCAD | 3D Spatial Reasoning in Robotics Assemblies">
-  <meta name="twitter:description" content="Industrial mechanical assembly reasoning with 25K human-verified assemblies.">
+  <meta name="twitter:title" content="OmniCAD | 3D Assembly Reasoning Benchmark">
+  <meta name="twitter:description" content="Component identification, 6-DoF pose reasoning, mate-graph reconstruction, and agentic assembly refinement.">
   <meta name="twitter:image" content="./public/media/overview.png">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <title>OmniCAD | 3D Spatial Reasoning in Robotics Assemblies</title>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ScholarlyArticle", "headline": "OmniCAD: A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies", "description": "A 25K-scale benchmark for assembly-aware 3D spatial reasoning across industrial mechanical systems.", "datePublished": "2026", "author": [{"@type": "Person", "name": "Mingjia Wang"}, {"@type": "Person", "name": "Taiting Lu"}, {"@type": "Person", "name": "Ziwei Dong"}, {"@type": "Person", "name": "Sisong Bei"}, {"@type": "Person", "name": "Jingying Zeng"}, {"@type": "Person", "name": "Runze Liu"}, {"@type": "Person", "name": "Kaiyuan Lin"}, {"@type": "Person", "name": "Hongxing Pan"}, {"@type": "Person", "name": "Kai Zhang"}, {"@type": "Person", "name": "Yizheng Hou"}, {"@type": "Person", "name": "Yangshoudu Zheng"}, {"@type": "Person", "name": "Chenchen Guo"}, {"@type": "Person", "name": "Weiyuan Meng"}, {"@type": "Person", "name": "Shubin Lyu"}, {"@type": "Person", "name": "Zhijun Zheng"}, {"@type": "Person", "name": "Dexu Wang"}, {"@type": "Person", "name": "Xinyu Bai"}, {"@type": "Person", "name": "Shurui Qian"}, {"@type": "Person", "name": "Zhangzixin"}, {"@type": "Person", "name": "Mengyu Pan"}, {"@type": "Person", "name": "Guoliang Shi"}, {"@type": "Person", "name": "Ling Ma"}, {"@type": "Person", "name": "Yifan Yang"}, {"@type": "Person", "name": "Qi He"}, {"@type": "Person", "name": "Yi-Chao Chen"}, {"@type": "Person", "name": "Yincheng Jin"}, {"@type": "Person", "name": "Sung-Liang Chen"}, {"@type": "Person", "name": "Mahanth Gowda"}]}</script>
+  <title>OmniCAD | 3D Assembly Reasoning Benchmark</title>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"ScholarlyArticle","headline":"OmniCAD: A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies","description":"A 25K-scale industrial CAD assembly benchmark for component identification, 6-DoF pose reasoning, mate-graph reconstruction, and tool-augmented agentic assembly reasoning.","image":"public/media/overview.png","datePublished":"2026","keywords":["OmniCAD","3D assembly reasoning","CAD assembly","vision-language models","mate graph","6-DoF pose","agentic assembly reasoning"],"author":[{"@type":"Person","name":"Mingjia Wang"},{"@type":"Person","name":"Taiting Lu"},{"@type":"Person","name":"Ziwei Dong"},{"@type":"Person","name":"Sisong Bei"},{"@type":"Person","name":"Jingying Zeng"},{"@type":"Person","name":"Runze Liu"},{"@type":"Person","name":"Kaiyuan Lin"},{"@type":"Person","name":"Hongxing Pan"},{"@type":"Person","name":"Kai Zhang"},{"@type":"Person","name":"Yizheng Hou"},{"@type":"Person","name":"Yangshoudu Zheng"},{"@type":"Person","name":"Chenchen Guo"},{"@type":"Person","name":"Weiyuan Meng"},{"@type":"Person","name":"Shubin Lyu"},{"@type":"Person","name":"Zhijun Zheng"},{"@type":"Person","name":"Dexu Wang"},{"@type":"Person","name":"Xinyu Bai"},{"@type":"Person","name":"Shurui Qian"},{"@type":"Person","name":"Zhangzixin"},{"@type":"Person","name":"Mengyu Pan"},{"@type":"Person","name":"Guoliang Shi"},{"@type":"Person","name":"Ling Ma"},{"@type":"Person","name":"Yifan Yang"},{"@type":"Person","name":"Qi He"},{"@type":"Person","name":"Yi-Chao Chen"},{"@type":"Person","name":"Yincheng Jin"},{"@type":"Person","name":"Sung-Liang Chen"},{"@type":"Person","name":"Mahanth Gowda"}]},{"@type":"Dataset","name":"OmniCAD Dataset","description":"25K real-world CAD assemblies with 300K component instances, 196K unique library parts, 289K mate relations, multimodal reference views, and structured assembly annotations."}]}</script>
 <style>
     :root{--ink:#10151b;--muted:#606870;--paper:#f4f2ec;--blue:#155eef;--line:#ccd1d5;--acid:#c8ff3d}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font-family:Arial,Helvetica,sans-serif}a{color:inherit;text-decoration:none}img{display:block;max-width:100%}.shell{width:min(1180px,calc(100% - 48px));margin:auto}.nav{height:84px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #c8cbc9}.wordmark{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:-.03em}.mark{display:grid;place-items:center;width:35px;height:35px;background:var(--ink);color:#fff;font:bold 10px monospace}.navlinks{display:flex;gap:31px;color:#515962;font-size:13px}.navpaper{font-size:13px;font-weight:700;border-bottom:1px solid;padding-bottom:4px}.hero{min-height:690px;display:grid;grid-template-columns:1.03fr .97fr;align-items:center;gap:58px;padding:68px 0 78px}.eyebrow,.kicker{font:600 11px monospace;letter-spacing:.11em;text-transform:uppercase}.eyebrow{color:#49535c}.eyebrow:before{content:"";display:inline-block;width:24px;height:2px;background:var(--blue);vertical-align:middle;margin-right:10px}h1{font-size:clamp(58px,6vw,86px);line-height:.93;letter-spacing:-.065em;margin:28px 0 30px;font-weight:600}h1 em{color:var(--blue);font-family:Georgia,serif;font-weight:400}.lede{max-width:640px;font-size:18px;line-height:1.6;color:#3f484f}.actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:35px}.button{background:var(--ink);color:#fff;padding:15px 19px;font-size:13px;font-weight:700}.button:hover{background:var(--blue)}.ghost{border:1px solid #bec3c4;color:#737a7f;padding:14px 17px;font-size:12px}.heroart{height:520px;position:relative;background-color:#e9e9e4;background-image:linear-gradient(#b9c2ca50 1px,transparent 1px),linear-gradient(90deg,#b9c2ca50 1px,transparent 1px);background-size:28px 28px;border:1px solid #c8cdcf;overflow:hidden;padding:56px 28px 82px;display:flex;align-items:center}.heroart img{width:100%;box-shadow:0 22px 60px #1a263321}.badge{position:absolute;background:var(--blue);color:#fff;padding:9px 12px;font:bold 15px monospace}.badge small{display:block;font-size:8px;text-transform:uppercase;opacity:.8}.b1{left:18px;bottom:18px}.b2{right:18px;top:18px;background:var(--acid);color:var(--ink)}.statsband{background:var(--blue);color:#fff}.stats{min-height:146px;display:grid;grid-template-columns:repeat(4,1fr);align-items:center}.stat{display:flex;align-items:center;gap:17px;padding:0 24px;border-right:1px solid #ffffff3d}.stat:first-child{padding-left:0}.stat:last-child{border:0}.stat strong{font-size:36px;letter-spacing:-.05em}.stat span{color:#dce8ff;font:10px/1.5 monospace;text-transform:uppercase}.section{padding:118px 0}.kicker{color:var(--blue);margin-bottom:32px}.kicker.light{color:var(--acid)}h2{font-size:clamp(38px,4.7vw,62px);line-height:1.02;letter-spacing:-.055em;font-weight:600;margin:0}.twocol{display:grid;grid-template-columns:1.15fr .85fr;gap:90px}.copy{color:var(--muted);font-size:16px;line-height:1.75;margin:0 0 18px}.card{background:#fff;margin-top:78px;border:1px solid #d2d5d5;padding:30px}.card img{width:100%;max-height:480px;object-fit:contain}.legend{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);margin-top:25px;padding-top:22px}.legend div{padding:0 21px;border-right:1px solid var(--line)}.legend div:first-child{padding-left:0}.legend div:last-child{border:0}.legend b,.legend small{display:block}.legend small{color:var(--muted);margin-top:5px}.dark{background:var(--ink);color:#fff}.taskhead{display:grid;grid-template-columns:1fr 420px;gap:90px;align-items:end}.taskgrid{display:grid;grid-template-columns:repeat(4,1fr);margin-top:72px;border-top:1px solid #495057}.task{min-height:300px;padding:27px 26px 20px;border-right:1px solid #495057}.task:first-child{padding-left:0}.task:last-child{border:0}.task>span{color:var(--acid);font:600 11px monospace}.task h3{font-size:21px;line-height:1.25;margin:80px 0 18px}.task p{color:#aeb6bc;font-size:13px;line-height:1.65}.results{display:grid;grid-template-columns:1fr 1fr;gap:88px;align-items:center}.figure{background:#fff;border:1px solid #d2d5d5;padding:22px}.resultcopy h2{font-size:clamp(38px,4vw,55px);margin-bottom:30px}.finding{display:grid;grid-template-columns:170px 1fr;align-items:center;border-top:1px solid var(--line);padding:18px 0}.finding b{color:var(--blue);font:bold 18px monospace}.finding span{color:var(--muted);font-size:13px}.people{border-top:1px solid var(--line);padding-top:90px}.authors{color:#394149;line-height:1.85;margin:43px 0 30px}.institutions{display:flex;gap:9px;flex-wrap:wrap}.institutions span{border:1px solid #bfc4c4;padding:10px 13px;font:10px monospace;text-transform:uppercase}.citation{background:var(--blue);color:#fff;padding:95px 0}.citegrid{display:grid;grid-template-columns:.8fr 1.2fr;gap:90px;align-items:center}pre{margin:0;overflow:auto;background:#0e214d;color:#e5edff;padding:27px;border-left:3px solid var(--acid);font:12px/1.65 monospace}footer{min-height:145px;display:flex;align-items:center;gap:36px}footer p{color:var(--muted);font-size:12px;flex:1}
     @media(max-width:900px){.navlinks{display:none}.hero,.twocol,.taskhead,.results,.citegrid{grid-template-columns:1fr}.hero{padding-top:55px}.stats,.taskgrid,.legend{grid-template-columns:1fr 1fr}.stat{min-height:82px;border:0}.task{border-bottom:1px solid #495057}.twocol,.taskhead,.results,.citegrid{gap:38px}}
@@ -454,46 +454,189 @@
     #benchmark .card>img{filter:none;mix-blend-mode:normal;background:#fff;transition:filter .2s ease}
     body:not(.bright) #benchmark .card>img{filter:invert(.9) hue-rotate(180deg) brightness(1.12) saturate(1.18) contrast(1.06);background:transparent}
   </style>
-
 <style>
-/* OmniCAD-specific content only. Layout and visual system are inherited directly from the supplied OmniLayout source. */
-.hero-authors{max-width:760px;margin:17px 0 0;color:#c0d4de;font-size:12px;line-height:1.55;text-shadow:0 2px 12px #000}
-.hero-affiliations{max-width:740px;margin:8px 0 0;color:#8fb0bd;font-size:11px;line-height:1.5;text-shadow:0 2px 12px #000}
-body.bright .hero-authors{color:#365f6e;text-shadow:0 2px 12px #fff}
-body.bright .hero-affiliations{color:#557582;text-shadow:0 2px 12px #fff}
-.video-only{display:block!important;padding:1px!important;background:#244455!important;border:0!important;gap:0!important;overflow:hidden}
-.video-only video{display:block;width:100%;height:auto;background:#020b10;object-fit:contain}
-body.bright .video-only{background:#93b9c0!important}
-body.bright .video-only video{background:#fff}
-/* Keep all supplied OmniCAD raster artwork in its original colors. */
-.heroart img,body.bright .heroart img,#benchmark .card>img,body:not(.bright) #benchmark .card>img,.metric-figure img,body:not(.bright) .metric-figure img{filter:none!important;mix-blend-mode:normal!important;opacity:1!important}
-.taskgrid.omnicad-three{grid-template-columns:repeat(3,1fr)}
-@media(max-width:900px){.taskgrid.omnicad-three{grid-template-columns:1fr 1fr}.hero-authors{font-size:11.5px}.hero-affiliations{font-size:10.5px}}
-@media(max-width:560px){.taskgrid.omnicad-three{grid-template-columns:1fr}.hero-authors{font-size:11px;line-height:1.5}.hero-affiliations{font-size:10px}}
+  .paper-meta{margin-top:18px;color:#8eb4c3;font:700 11px/1.7 "Courier New",monospace;letter-spacing:.06em;text-transform:uppercase}
+  body.bright .paper-meta{color:#557582}
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .hero h2{font-size:clamp(24px,2.4vw,36px);line-height:1.13;letter-spacing:-.035em;margin:0;max-width:690px}
+  .hero .lede{margin-top:22px}
+  .showcase-static{margin:0 0 34px;border:1px solid #244455;background:#071723;padding:18px}
+  .showcase-static img{width:100%;height:auto;background:#fff}
+  .showcase-static figcaption{margin-top:12px;color:#6f8e9e;font:10px/1.7 "Courier New",monospace;letter-spacing:.05em;text-transform:uppercase}
+  body.bright .showcase-static{background:#fff;border-color:#a9cbd1} body.bright .showcase-static figcaption{color:#5f7882}
+  .asset-note{margin:22px 0 18px;padding:14px 16px;border-left:3px solid var(--acid);background:#0b2b3a;color:#a9c8d4;font:11px/1.75 "Courier New",monospace}
+  body.bright .asset-note{background:#dceff0;color:#315d69;border-left-color:#9a7000}
+  .model-matrix.omnicad-models{grid-template-columns:repeat(5,minmax(190px,1fr))}
+  .model-matrix.omnicad-models .three-viewer{height:220px}
+  .framework-card{margin-top:54px;background:#fff;border:1px solid #d2d5d5;padding:24px}
+  .framework-card img{width:100%;height:auto}
+  body:not(.bright) .framework-card{background:#071723;border-color:#31576a}
+  body:not(.bright) .framework-card img{filter:invert(.9) hue-rotate(180deg) brightness(1.06) contrast(1.03)}
+  .metrics-row.four{grid-template-columns:repeat(2,1fr)}
+  .metrics-row.four .metric-figure img{max-height:470px;object-fit:contain}
+  .quant-section.band::before{background:#081d28}
+  body.bright .quant-section.band::before{background:#e5f2f1}
+  .quant-table th:nth-child(2),.quant-table td:nth-child(2){text-align:center}
+  .quant-table td.model-name:empty{background:#071723}
+  body.bright .quant-table td.model-name:empty{background:#fff}
+  .finding-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#31576a;border:1px solid #31576a;margin-top:42px}
+  .finding-card{background:#071723;padding:22px;min-height:160px}.finding-card b{display:block;color:var(--acid);font:800 24px "Courier New",monospace;margin-bottom:10px}.finding-card span{color:#a9c8d4;font-size:12px;line-height:1.65}
+  body.bright .finding-grid{background:#a9cbd1;border-color:#a9cbd1}.finding-card{ }.bright .finding-card{background:#fff}.bright .finding-card b{color:#087f96}.bright .finding-card span{color:#496a76}
+  .citation-note{color:#89aab7;font:11px/1.7 "Courier New",monospace;margin-top:14px}
+  .footer-note{max-width:720px}
+  @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.model-matrix.omnicad-models{grid-template-columns:repeat(5,220px)}.finding-grid{grid-template-columns:1fr}.metrics-row.four{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.stats{grid-template-columns:1fr}.metrics-row.four{grid-template-columns:1fr}.hero h2{font-size:25px}}
+</style>
+
+
+
+<style id="omnicad-layout-fidelity">
+  /* Keep OmniLayout geometry/typography; only adapt content-specific details requested for OmniCAD. */
+  h1,h2{ text-transform:none !important; }
+  .hero h2{font-size:clamp(23px,2.25vw,34px);line-height:1.14;letter-spacing:-.035em;font-weight:400;margin:0;max-width:720px;text-shadow:0 2px 18px #000;}
+  .hero-authors{max-width:740px;margin:17px 0 0;color:#c0d4de;font:10.5px/1.55 "Courier New",monospace;text-shadow:0 2px 12px #000;}
+  .hero-affiliations{max-width:720px;margin:8px 0 0;color:#83a7b7;font:9.5px/1.5 "Courier New",monospace;text-shadow:0 2px 12px #000;}
+  .hero .actions{margin-top:20px;}
+  body.bright .hero h2{color:#102f3d;text-shadow:0 2px 18px #fff;}
+  body.bright .hero-authors{color:#365f6e;text-shadow:0 2px 12px #fff;}
+  body.bright .hero-affiliations{color:#557582;text-shadow:0 2px 12px #fff;}
+
+  /* User-supplied paper figures/videos must retain authored colors. */
+  img,body.bright img,body:not(.bright) img{filter:none !important;mix-blend-mode:normal !important;opacity:1 !important;}
+  #benchmark .card>img,body:not(.bright) #benchmark .card>img,.framework-card img,body:not(.bright) .framework-card img,.metric-figure img,body:not(.bright) .metric-figure img{filter:none !important;mix-blend-mode:normal !important;opacity:1 !important;}
+
+  /* Qualitative Placement Examples is replaced by one full-width MP4 only; surrounding layout stays OmniLayout. */
+  .qualitative-video-wrap{margin:0;border:1px solid #244455;background:#071723;overflow:hidden;}
+  .qualitative-video{display:block;width:100%;height:auto;background:#071723;}
+  body.bright .qualitative-video-wrap{border-color:#a9cbd1;background:#fff;}
+
+  /* OmniCAD has four dataset-statistics figures; keep OmniLayout mosaic sizing. */
+  .metrics-row.four{grid-template-columns:repeat(4,1fr);}
+  .metrics-row.four .metric-figure img{max-height:none;object-fit:contain;}
+  .metrics-intro h2{font-size:clamp(32px,3.5vw,50px);line-height:1.05;}
+
+  @media(max-width:900px){
+    .hero-authors{font-size:10px}.hero-affiliations{font-size:9px}
+    .metrics-row.four{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:560px){
+    .hero h2{font-size:24px}.hero-authors{font-size:9.5px;line-height:1.45}.hero-affiliations{font-size:8.5px}.metrics-row.four{grid-template-columns:1fr;}
+  }
 </style>
 
 </head>
 <body>
-  <nav class="nav shell"><a class="wordmark" href="#top">OmniCAD</a><div class="navlinks"><a href="#showcase">Qualitative Results</a><a href="#benchmark">Benchmark</a><a href="#results">Dataset Statistics</a><a href="#direct-results">Direct Results</a><a href="#agentic-results">Agentic Results</a><a href="#citation">Citation</a></div><div class="nav-actions"><a class="omnieda-link" href="https://www.omnieda.com/">OmniEDA ↗</a><button class="theme-toggle" type="button" aria-label="Switch to bright theme" aria-pressed="false"><span>Bright</span></button><a href="./public/omnicad-paper.pdf">Paper PDF ↗</a></div></nav>
+  <nav class="nav shell">
+    <a class="wordmark" href="#top">OmniCAD</a>
+    <div class="navlinks">
+      <a href="#showcase">Qualitative Results</a>
+      <a href="#benchmark">Benchmark</a>
+      <a href="#tasks">Tasks</a>
+      <a href="#direct-results">Direct Results</a>
+      <a href="#agentic-results">Agentic Results</a>
+      <a href="#citation">Citation</a>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" type="button" aria-label="Switch to bright theme" aria-pressed="false"><span>Bright</span></button>
+      <a href="./public/omnicad-paper.pdf">Paper PDF ↗</a>
+    </div>
+  </nav>
+
   <main>
-    <section class="hero shell" id="top"><div><h1>OmniCAD</h1><h2>A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies</h2><p class="hero-authors">Mingjia Wang* · Taiting Lu* · Ziwei Dong · Sisong Bei · Jingying Zeng · Runze Liu · Kaiyuan Lin · Hongxing Pan · Kai Zhang · Yizheng Hou · Yangshoudu Zheng · Chenchen Guo · Weiyuan Meng · Shubin Lyu · Zhijun Zheng · Dexu Wang · Xinyu Bai · Shurui Qian · Zhangzixin · Mengyu Pan · Guoliang Shi · Ling Ma · Yifan Yang · Qi He · Yi-Chao Chen · Yincheng Jin · Sung-Liang Chen† · Mahanth Gowda†</p><p class="hero-affiliations">Shanghai Jiao Tong University · Pennsylvania State University · Independent Researcher · Microsoft Research · Binghamton University</p><div class="actions"><a class="button" href="./public/omnicad-paper.pdf" download="omnicad-paper.pdf">Download paper ↓</a><a class="button dataset-button" href="./res/omnicad_samples.zip" download>Dataset Samples ↓</a><a class="button dataset-button" href="./res/omnicad_code.zip" download>Code ↓</a></div></div><div class="heroart"><img src="./public/media/overview.png" alt="OmniCAD benchmark overview"><div class="badge b1">25K<small>assemblies</small></div><div class="badge b2">21<small>mate types</small></div></div></section>
+    <section class="hero shell" id="top">
+      <div>
+        <h1>OmniCAD</h1>
+        <h2>A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies</h2>
+        <p class="hero-authors">Mingjia Wang* · Taiting Lu* · Ziwei Dong · Sisong Bei · Jingying Zeng · Runze Liu · Kaiyuan Lin · Hongxing Pan · Kai Zhang · Yizheng Hou · Yangshoudu Zheng · Chenchen Guo · Weiyuan Meng · Shubin Lyu · Zhijun Zheng · Dexu Wang · Xinyu Bai · Shurui Qian · Zhangzixin · Mengyu Pan · Guoliang Shi · Ling Ma · Yifan Yang · Qi He · Yi-Chao Chen · Yincheng Jin · Sung-Liang Chen† · Mahanth Gowda†</p>
+        <p class="hero-affiliations">Shanghai Jiao Tong University · Pennsylvania State University · Independent Researcher · Microsoft Research · Binghamton University</p>
+        <div class="actions">
+          <a class="button" href="./public/omnicad-paper.pdf" download="omnicad-paper.pdf">Download paper ↓</a>
+          <a class="button dataset-button" href="./res/omnicad_samples.zip" download>Dataset Samples ↓</a>
+          <a class="button dataset-button" href="./res/omnicad_code.zip" download>Code ↓</a>
+        </div>
+      </div>
+      <div class="heroart">
+        <img src="./public/media/overview.png" alt="OmniCAD industrial assembly benchmark overview">
+        <div class="badge b1">25K<small>assemblies</small></div>
+        <div class="badge b2">289K<small>mate relations</small></div>
+      </div>
+    </section>
 
-    <section class="section showcase" id="showcase"><div class="shell"><div class="kicker light">Tested Upon State-of-the-Art VLMs</div><div class="showcase-head"><h2>Qualitative Results</h2><p class="copy">Representative assembly cases are presented in one continuous high-resolution video. The video keeps the original rendering colors and can be opened full-screen to inspect fine component placement and assembly details.</p></div><div class="showcase-browser video-only"><video autoplay loop muted playsinline controls preload="metadata" poster="./public/media/qualitative-results.png" aria-label="OmniCAD qualitative assembly examples"><source src="./public/media/3D-interaction.mp4" type="video/mp4"></video></div></div></section>
+    <section class="section showcase" id="showcase">
+      <div class="shell">
+        <div class="kicker light">Qualitative results</div>
+        <div class="showcase-head">
+          <h2>Qualitative assembly examples</h2>
+          <p class="copy">Representative OmniCAD cases are presented in one continuous full-width video, keeping visual scale and comparison layout consistent across examples. The video preserves the original rendering colors and can be viewed full-screen for fine assembly details.</p>
+        </div>
+        <figure class="qualitative-video-wrap">
+          <video class="qualitative-video" autoplay loop muted playsinline controls preload="metadata" poster="./public/media/qualitative-results.png" aria-label="OmniCAD qualitative assembly examples">
+            <source src="./public/media/3D-interaction.mp4" type="video/mp4">
+          </video>
+        </figure>
+      </div>
+    </section>
 
-    <section class="section shell" id="benchmark"><div class="kicker">The benchmark</div><div class="twocol"><h2>Industrial assembly reasoning requires geometry, relations, and physical validity.</h2><div><p class="copy">OmniCAD contains 25K real-world industrial mechanical assemblies spanning robotic mechanisms, automotive components, aerospace structures, agricultural machinery, and other engineering systems. Each assembly includes a candidate 3D part library and a human-engineered ground-truth assembly.</p><p class="copy">The benchmark provides component-level 6-DoF poses, explicit part-to-part mate graphs, and 20-view visual observations. Assemblies contain 12 parts on average and cover 21 distinct mate-relation types.</p></div></div><div class="card"><img src="./public/media/benchmark.png" alt="OmniCAD sample with assembly library, mate graph, ground-truth model, and multi-view renders"><div class="legend"><div><b>Component Library</b><small>Candidate 3D parts</small></div><div><b>Mate Graph</b><small>Part-to-part constraints</small></div><div><b>Ground Truth</b><small>Human-verified assembly</small></div><div><b>Visual Evidence</b><small>20 reference views</small></div></div></div></section>
+    <section class="section shell" id="benchmark">
+      <div class="kicker">The benchmark</div>
+      <div class="twocol">
+        <h2>Assembly intelligence needs more than shape recognition.</h2>
+        <div>
+          <p class="copy">OmniCAD evaluates whether a multimodal model can recover a physically plausible industrial assembly from a deduplicated component library and visual/geometric evidence. Repeated component instances share library geometry while retaining independent IDs, poses, and mate incidences.</p>
+          <p class="copy">Each sample preserves component-to-library mappings, 6-DoF poses, component-level mate relations, directed assembly dependencies, assembly/component meshes, and eight fixed cube-vertex reference views under same-color and color-by-component settings.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="./public/media/benchmark.png" alt="OmniCAD sample composition with component library, mate graph, ground-truth model, and cube-vertex renders">
+        <div class="legend">
+          <div><b>Component Library</b><small>Deduplicated OBJ parts</small></div>
+          <div><b>Mate Graph</b><small>Component connectivity + mate type</small></div>
+          <div><b>Ground Truth</b><small>Verified 3D assembly + poses</small></div>
+          <div><b>Visual Evidence</b><small>8 cube-vertex renders</small></div>
+        </div>
+      </div>
+    </section>
 
-    <section class="section dark" id="tasks"><div class="shell"><div class="kicker light">Three evaluation tracks</div><div class="taskhead"><h2>From component poses to relational and agentic assembly reasoning.</h2><p class="copy">OmniCAD evaluates three complementary capabilities required for physically valid industrial assembly.</p></div><div class="taskgrid omnicad-three"><article class="task"><span>01</span><h3>Component-level 3D spatial reasoning</h3><p>Infer the 3D position and orientation of each component from assembly observations.</p></article><article class="task"><span>02</span><h3>Part-to-part relational reasoning</h3><p>Identify mating relationships and recover the underlying assembly connectivity and constraint structure.</p></article><article class="task"><span>03</span><h3>Tool-augmented agentic reasoning</h3><p>Iteratively inspect visual or geometric feedback and self-correct component poses and mating relationships.</p></article></div></div></section>
+    <section class="section dark" id="tasks">
+      <div class="shell">
+        <div class="kicker light">Three evaluation tracks</div>
+        <div class="taskhead">
+          <h2>From part selection to constraint-aware refinement.</h2>
+          <p class="copy">The benchmark separates component identity, spatial placement, relational structure, and iterative tool use so that failure modes remain measurable rather than collapsing into a single end metric.</p>
+        </div>
+        <div class="taskgrid">
+          <article class="task"><span>01</span><h3>Component identification</h3><p>Select the required component instances from the candidate library, including repeated reuse of identical library geometry.</p></article>
+          <article class="task"><span>02</span><h3>3D pose reasoning</h3><p>Estimate absolute position and orientation for every component and recover accurate relative placement in the assembly frame.</p></article>
+          <article class="task"><span>03</span><h3>Mate-graph reasoning</h3><p>Recover component-level connectivity and mate types such as coincident, concentric, parallel, perpendicular, distance, and angle constraints.</p></article>
+          <article class="task"><span>04</span><h3>Agentic assembly reasoning</h3><p>Request visualization and geometric-conflict feedback, then revise poses, mates, and physical plausibility over multiple rounds.</p></article>
+        </div>
+        <div class="framework-card"><img src="./public/media/agentic-framework.png" alt="OmniCAD agentic assembly framework"></div>
+      </div>
+    </section>
 
-    <section class="section shell results metrics-results" id="results"><div class="metrics-intro"><div><div class="kicker">Dataset statistics</div><h2>A broad cross-section of real industrial assemblies.</h2></div><p class="copy">OmniCAD spans diverse industrial domains and exposes long-tail complexity in component libraries, repeated instances, and dense mating constraints. The benchmark contains 25K assemblies with an average of 12 parts per assembly.</p></div><div class="metrics-table"><div class="metrics-row two"><figure class="metric-figure"><img src="./public/media/findings/application-keywords.png" alt="OmniCAD application keyword word cloud"><figcaption>Application keywords</figcaption></figure><figure class="metric-figure"><img src="./public/media/findings/category-distribution.png" alt="OmniCAD dataset category distribution"><figcaption>Dataset categories</figcaption></figure></div><div class="metrics-row three"><figure class="metric-figure"><img src="./public/media/findings/library-parts.png" alt="Library parts per assembly distribution"><figcaption>Library parts</figcaption></figure><figure class="metric-figure"><img src="./public/media/findings/parts-per-assembly.png" alt="Parts per assembly distribution"><figcaption>Parts per assembly</figcaption></figure><figure class="metric-figure"><img src="./public/media/findings/mates-per-assembly.png" alt="Mate relations per assembly distribution"><figcaption>Mates per assembly</figcaption></figure></div></div></section>
+    <section class="section shell results metrics-results" id="statistics">
+      <div class="metrics-intro">
+        <div><div class="kicker">Dataset statistics</div><h2>Real assemblies expose repeated parts, dense constraints, and long-tail complexity.</h2></div>
+        <p class="copy">The dataset spans robotics, manufacturing, electronics, packaging, welding, inspection, automation, aerospace, machine tools, and other industrial domains. Assemblies average 12 component instances and 11.56 mate relations, with long tails extending to hundreds of parts.</p>
+      </div>
+      <div class="metrics-table">
+        <div class="metrics-row four">
+          <figure class="metric-figure"><img src="./public/media/findings/application-keywords.png" alt="Application keyword word cloud"><figcaption>Application keywords</figcaption></figure>
+          <figure class="metric-figure"><img src="./public/media/findings/library-parts.png" alt="Library parts per assembly distribution"><figcaption>Library parts per assembly</figcaption></figure>
+          <figure class="metric-figure"><img src="./public/media/findings/parts-per-assembly.png" alt="Parts per assembly distribution"><figcaption>Parts per assembly</figcaption></figure>
+          <figure class="metric-figure"><img src="./public/media/findings/mates-per-assembly.png" alt="Mates per assembly distribution"><figcaption>Mates per assembly</figcaption></figure>
+        </div>
+      </div>
+    </section>
 
-<section class="section shell quant-section" id="direct-results">
-<div class="quant-head">
-<div><div class="kicker">Quantitative results</div><h2>Direct One-shot Results</h2><div class="quant-meta">5 input configurations · 9 LMMs</div></div>
-<p class="copy">SameColor, RefOBJ, ColorView, MG+Color, and MG+OBJ+Color isolate the effects of appearance cues, explicit assembly geometry, and connectivity priors. Higher is better except CD, SCD, PosErr, and runtime.</p>
-</div>
-<div class="quant-frame"><div class="quant-wrap"><table class="quant-table">
-<thead><tr><th>Model</th><th>Size</th><th>Input</th><th>ID-NR ↑</th><th>ID-R ↑</th><th>Pos@10 ↑</th><th>Rot@10 ↑</th><th>CDᵢ ↓</th><th>PA ↑</th><th>PairF1 ↑</th><th>TypeAcc ↑</th><th>GSim ↑</th><th>C-Free ↑</th><th>SCD ↓</th><th>PosErr ↓</th><th>RT ↓</th><th>PR ↑</th></tr></thead>
-<tbody><tr><td class="model-name">GPT-5.5</td><td>-</td><td class="variant">SameColor</td><td>100.00</td><td>60.00</td><td>15.30</td><td>48.40</td><td>245.6</td><td>32.00</td><td>36.40</td><td>44.10</td><td>12.10</td><td>3.10</td><td>144.0</td><td>368.9</td><td>111.0</td><td>37.00</td></tr>
+    <section class="section shell quant-section" id="direct-results">
+      <div class="quant-head">
+        <div><div class="kicker">Quantitative results</div><h2>Direct One-shot Results</h2><div class="quant-meta">5 input configurations · 9 LMMs</div></div>
+        <p class="copy">SameColor, RefOBJ, ColorView, MG+Color, and MG+OBJ+Color isolate the effects of appearance cues, explicit assembly geometry, and connectivity priors. Higher is better except CD, SCD, PosErr, and runtime.</p>
+      </div>
+      <div class="quant-frame"><div class="quant-wrap"><table class="quant-table">
+        <thead><tr><th>Model</th><th>Size</th><th>Input</th><th>ID-NR ↑</th><th>ID-R ↑</th><th>Pos@10 ↑</th><th>Rot@10 ↑</th><th>CDᵢ ↓</th><th>PA ↑</th><th>PairF1 ↑</th><th>TypeAcc ↑</th><th>GSim ↑</th><th>C-Free ↑</th><th>SCD ↓</th><th>PosErr ↓</th><th>RT ↓</th><th>PR ↑</th></tr></thead>
+        <tbody><tr><td class="model-name">GPT-5.5</td><td>-</td><td class="variant">SameColor</td><td>100.00</td><td>60.00</td><td>15.30</td><td>48.40</td><td>245.6</td><td>32.00</td><td>36.40</td><td>44.10</td><td>12.10</td><td>3.10</td><td>144.0</td><td>368.9</td><td>111.0</td><td>37.00</td></tr>
 <tr><td class="model-name"></td><td>-</td><td class="variant">RefOBJ</td><td>100.00</td><td>71.40</td><td>0.00</td><td>84.70</td><td>240.8</td><td>14.70</td><td>46.10</td><td>59.70</td><td>23.30</td><td>11.80</td><td>152.4</td><td>316.3</td><td>99.5</td><td>21.00</td></tr>
 <tr><td class="model-name"></td><td>-</td><td class="variant">ColorView</td><td>92.90</td><td>57.10</td><td>15.70</td><td>43.30</td><td>349.3</td><td>25.00</td><td>35.70</td><td>44.00</td><td>8.40</td><td>10.00</td><td>232.2</td><td>481.9</td><td>171.3</td><td>35.00</td></tr>
 <tr><td class="model-name"></td><td>-</td><td class="variant">MG+Color</td><td>--</td><td>--</td><td>27.90</td><td>63.20</td><td>279.7</td><td>46.70</td><td>--</td><td>--</td><td>--</td><td>0.00</td><td>186.5</td><td>328.6</td><td>83.1</td><td>20.00</td></tr>
@@ -538,17 +681,22 @@ body.bright .video-only video{background:#fff}
 <tr><td class="model-name"></td><td>-</td><td class="variant">ColorView</td><td>94.40</td><td>3.30</td><td>15.00</td><td>35.10</td><td>384.7</td><td>17.10</td><td>20.80</td><td>14.50</td><td>8.30</td><td>4.70</td><td>240.6</td><td>421.2</td><td>400.8</td><td>51.60</td></tr>
 <tr><td class="model-name"></td><td>-</td><td class="variant">MG+Color</td><td>--</td><td>--</td><td>15.10</td><td>38.80</td><td>354.6</td><td>17.80</td><td>--</td><td>--</td><td>--</td><td>2.50</td><td>213.7</td><td>390.0</td><td>331.9</td><td>48.40</td></tr>
 <tr><td class="model-name"></td><td>-</td><td class="variant">MG+OBJ+Color</td><td>--</td><td>--</td><td>2.50</td><td>40.20</td><td>376.7</td><td>5.10</td><td>--</td><td>--</td><td>--</td><td>8.70</td><td>257.3</td><td>430.9</td><td>648.8</td><td>25.20</td></tr></tbody>
-</table></div><span aria-hidden="true" class="quant-scroll-hint">→</span></div>
+      </table></div><span class="quant-scroll-hint" aria-hidden="true">→</span></div>
+      <div class="finding-grid">
+        <div class="finding-card"><b>95.1%</b><span>Average non-repeated component identification under ColorView, versus only 26.4% for repeated-instance identification.</span></div>
+        <div class="finding-card"><b>27.9%</b><span>Best one-shot Pos@10, showing that metric translation remains substantially harder than coarse orientation estimation.</span></div>
+        <div class="finding-card"><b>23.3%</b><span>Best one-shot graph similarity, highlighting incomplete or incorrect mate-edge recovery even when local pair metrics improve.</span></div>
+      </div>
+    </section>
 
-</section>
-<section class="section shell quant-section band" id="agentic-results">
-<div class="quant-head">
-<div><div class="kicker">Quantitative results</div><h2>Agentic Results</h2><div class="quant-meta">2DVis · MG+2DVis · Conflict+2DVis</div></div>
-<p class="copy">Agentic runs iteratively revise the complete structured prediction using render feedback, optional mate-graph conditioning, and geometric conflict reports. Runs stop when the model declines further tools or after ten rounds.</p>
-</div>
-<div class="quant-frame"><div class="quant-wrap"><table class="quant-table">
-<thead><tr><th>Model</th><th>Size</th><th>Feedback</th><th>ID-NR ↑</th><th>ID-R ↑</th><th>Pos@10 ↑</th><th>Rot@10 ↑</th><th>CDᵢ ↓</th><th>PA ↑</th><th>PairF1 ↑</th><th>TypeAcc ↑</th><th>GSim ↑</th><th>C-Free ↑</th><th>SCD ↓</th><th>PosErr ↓</th><th>Step ↓</th><th>RT ↓</th><th>PR ↑</th></tr></thead>
-<tbody><tr><td class="model-name">GPT-5.5</td><td>-</td><td class="variant">2DVis</td><td>98.40</td><td>54.50</td><td>18.70</td><td>46.70</td><td>182.5</td><td>30.30</td><td>32.70</td><td>43.40</td><td>15.50</td><td>16.00</td><td>120.6</td><td>224.7</td><td>1.41</td><td>148.0</td><td>62.00</td></tr>
+    <section class="section shell quant-section band" id="agentic-results">
+      <div class="quant-head">
+        <div><div class="kicker">Quantitative results</div><h2>Agentic Results</h2><div class="quant-meta">2DVis · MG+2DVis · Conflict+2DVis</div></div>
+        <p class="copy">Agentic runs iteratively revise the complete structured prediction using render feedback, optional mate-graph conditioning, and geometric conflict reports. Runs stop when the model declines further tools or after ten rounds.</p>
+      </div>
+      <div class="quant-frame"><div class="quant-wrap"><table class="quant-table">
+        <thead><tr><th>Model</th><th>Size</th><th>Feedback</th><th>ID-NR ↑</th><th>ID-R ↑</th><th>Pos@10 ↑</th><th>Rot@10 ↑</th><th>CDᵢ ↓</th><th>PA ↑</th><th>PairF1 ↑</th><th>TypeAcc ↑</th><th>GSim ↑</th><th>C-Free ↑</th><th>SCD ↓</th><th>PosErr ↓</th><th>Step ↓</th><th>RT ↓</th><th>PR ↑</th></tr></thead>
+        <tbody><tr><td class="model-name">GPT-5.5</td><td>-</td><td class="variant">2DVis</td><td>98.40</td><td>54.50</td><td>18.70</td><td>46.70</td><td>182.5</td><td>30.30</td><td>32.70</td><td>43.40</td><td>15.50</td><td>16.00</td><td>120.6</td><td>224.7</td><td>1.41</td><td>148.0</td><td>62.00</td></tr>
 <tr><td class="model-name"></td><td>-</td><td class="variant">MG+2DVis</td><td>--</td><td>--</td><td>21.20</td><td>50.10</td><td>189.5</td><td>33.30</td><td>--</td><td>--</td><td>--</td><td>20.00</td><td>135.6</td><td>246.0</td><td>1.14</td><td>130.9</td><td>53.74</td></tr>
 <tr><td class="model-name"></td><td>-</td><td class="variant">Conflict+2DVis</td><td>100.00</td><td>46.30</td><td>17.50</td><td>42.70</td><td>227.9</td><td>28.20</td><td>30.50</td><td>33.40</td><td>14.60</td><td>20.70</td><td>169.1</td><td>291.6</td><td>2.18</td><td>218.9</td><td>70.96</td></tr>
 <tr><td class="model-name">GPT-5-mini</td><td>-</td><td class="variant">2DVis</td><td>98.10</td><td>13.90</td><td>18.20</td><td>44.90</td><td>209.5</td><td>27.20</td><td>28.60</td><td>11.90</td><td>13.00</td><td>27.30</td><td>124.6</td><td>230.3</td><td>1.28</td><td>22.0</td><td>50.22</td></tr>
@@ -575,39 +723,50 @@ body.bright .video-only video{background:#fff}
 <tr><td class="model-name">Qwen3.7-Plus</td><td>-</td><td class="variant">2DVis</td><td>97.90</td><td>17.60</td><td>21.90</td><td>54.80</td><td>613.1</td><td>29.50</td><td>33.70</td><td>36.20</td><td>21.40</td><td>24.60</td><td>378.9</td><td>633.9</td><td>2.03</td><td>272.9</td><td>49.44</td></tr>
 <tr><td class="model-name"></td><td>-</td><td class="variant">MG+2DVis</td><td>--</td><td>--</td><td>29.30</td><td>66.50</td><td>260.1</td><td>37.40</td><td>--</td><td>--</td><td>--</td><td>27.90</td><td>234.5</td><td>276.0</td><td>3.88</td><td>436.6</td><td>51.54</td></tr>
 <tr><td class="model-name"></td><td>-</td><td class="variant">Conflict+2DVis</td><td>97.60</td><td>14.30</td><td>24.70</td><td>55.50</td><td>899.7</td><td>31.20</td><td>36.20</td><td>33.60</td><td>24.50</td><td>23.20</td><td>535.7</td><td>990.4</td><td>2.12</td><td>300.4</td><td>45.25</td></tr></tbody>
-</table></div><span aria-hidden="true" class="quant-scroll-hint">→</span></div>
+      </table></div><span class="quant-scroll-hint" aria-hidden="true">→</span></div>
+      <div class="finding-grid">
+        <div class="finding-card"><b>34.6%</b><span>Best agentic Pos@10, obtained by Gemini 3.1 Pro with conflict-guided visual feedback.</span></div>
+        <div class="finding-card"><b>57.1%</b><span>Best agentic placement accuracy, improving coarse assembly placement but still leaving substantial fine-alignment error.</span></div>
+        <div class="finding-card"><b>43.8%</b><span>Best conflict-free rate. More than half of predictions still contain geometric conflicts even with explicit diagnostics.</span></div>
+      </div>
+    </section>
 
-</section>
+    <section class="section people shell">
+      <div class="kicker">Authors & institutions</div>
+      <h2>OmniCAD: A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies</h2>
+      <p class="authors">Mingjia Wang* · Taiting Lu* · Ziwei Dong · Sisong Bei · Jingying Zeng · Runze Liu · Kaiyuan Lin · Hongxing Pan · Kai Zhang · Yizheng Hou · Yangshoudu Zheng · Chenchen Guo · Weiyuan Meng · Shubin Lyu · Zhijun Zheng · Dexu Wang · Xinyu Bai · Shurui Qian · Zhangzixin · Mengyu Pan · Guoliang Shi · Ling Ma · Yifan Yang · Qi He · Yi-Chao Chen · Yincheng Jin · Sung-Liang Chen† · Mahanth Gowda†</p>
+      <div class="institutions"><span>Shanghai Jiao Tong University</span><span>Pennsylvania State University</span><span>Independent Researcher</span><span>Microsoft Research</span><span>Binghamton University</span></div>
+    </section>
 
-    <section class="section people shell"><div class="kicker">Authors & institutions</div><h2>OmniCAD: A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies</h2><p class="authors">Mingjia Wang* · Taiting Lu* · Ziwei Dong · Sisong Bei · Jingying Zeng · Runze Liu · Kaiyuan Lin · Hongxing Pan · Kai Zhang · Yizheng Hou · Yangshoudu Zheng · Chenchen Guo · Weiyuan Meng · Shubin Lyu · Zhijun Zheng · Dexu Wang · Xinyu Bai · Shurui Qian · Zhangzixin · Mengyu Pan · Guoliang Shi · Ling Ma · Yifan Yang · Qi He · Yi-Chao Chen · Yincheng Jin · Sung-Liang Chen† · Mahanth Gowda†</p><div class="institutions"><span>Shanghai Jiao Tong University</span><span>Pennsylvania State University</span><span>Independent Researcher</span><span>Microsoft Research</span><span>Binghamton University</span></div></section>
-    <section class="citation" id="citation"><div class="shell citegrid"><div><div class="kicker light">Citation</div><h2>BibTex</h2></div><pre>@article{wang2026omnicad,
-      title={OmniCAD: A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies},
-      author={Mingjia Wang and Taiting Lu and Ziwei Dong and Sisong Bei and Jingying Zeng and Runze Liu and Kaiyuan Lin and Hongxing Pan and Kai Zhang and Yizheng Hou and Yangshoudu Zheng and Chenchen Guo and Weiyuan Meng and Shubin Lyu and Zhijun Zheng and Dexu Wang and Xinyu Bai and Shurui Qian and Zhangzixin and Mengyu Pan and Guoliang Shi and Ling Ma and Yifan Yang and Qi He and Yi-Chao Chen and Yincheng Jin and Sung-Liang Chen and Mahanth Gowda},
-      year={2026},
-      note={Preprint}
-}</pre></div></section>
+    <section class="citation" id="citation">
+      <div class="shell citegrid">
+        <div><div class="kicker light">Citation</div><h2>BibTeX</h2><p class="citation-note">No public arXiv/DOI identifier was present in the supplied OmniCAD project, so the citation intentionally avoids inventing one.</p></div>
+        <pre>@article{wang2026omnicad,
+  title={OmniCAD: A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies},
+  author={Mingjia Wang and Taiting Lu and Ziwei Dong and Sisong Bei and Jingying Zeng and Runze Liu and Kaiyuan Lin and Hongxing Pan and Kai Zhang and Yizheng Hou and Yangshoudu Zheng and Chenchen Guo and Weiyuan Meng and Shubin Lyu and Zhijun Zheng and Dexu Wang and Xinyu Bai and Shurui Qian and Zhangzixin and Mengyu Pan and Guoliang Shi and Ling Ma and Yifan Yang and Qi He and Yi-Chao Chen and Yincheng Jin and Sung-Liang Chen and Mahanth Gowda},
+  year={2026},
+  note={Preprint}
+}</pre>
+      </div>
+    </section>
   </main>
-  <footer class="shell"><div class="wordmark"><span class="mark">OC</span>OmniCAD</div><p>A large-scale benchmark for 3D spatial reasoning in robotics assemblies.</p><a href="./public/omnicad-paper.pdf">Paper PDF ↗</a></footer>
+
+  <footer><div class="shell"><div><b>OmniCAD</b><div>3D spatial reasoning for industrial CAD assemblies</div></div><div class="footer-note">Static single-page research site. Replace the empty release ZIPs and optional GLB assets without changing the existing download or viewer paths.</div></div></footer>
+
   <script>
     (() => {
-      const toggle = document.querySelector('.theme-toggle');
-      const label = toggle.querySelector('span');
-      const applyTheme = bright => {
-        document.body.classList.toggle('bright', bright);
-        toggle.setAttribute('aria-pressed', String(bright));
-        toggle.setAttribute('aria-label', bright ? 'Switch to dark theme' : 'Switch to bright theme');
-        label.textContent = bright ? 'Dark' : 'Bright';
-        localStorage.setItem('omnicad-theme', bright ? 'bright' : 'dark');
-      };
-      applyTheme(localStorage.getItem('omnicad-theme') === 'bright');
-      toggle.addEventListener('click', () => applyTheme(!document.body.classList.contains('bright')));
-      document.querySelectorAll('.quant-frame').forEach(frame => {
-        const wrap = frame.querySelector('.quant-wrap');
-        if (!wrap) return;
-        const update = () => frame.classList.toggle('is-overflowing', wrap.scrollWidth > wrap.clientWidth + 1);
-        wrap.addEventListener('scroll', () => { if (wrap.scrollLeft > 4) frame.classList.add('has-scrolled'); }, {passive:true});
-        window.addEventListener('resize', update, {passive:true});
-        requestAnimationFrame(update);
+      const body=document.body;
+      const toggle=document.querySelector('.theme-toggle');
+      const saved=localStorage.getItem('omnicad-theme');
+      const apply=bright=>{body.classList.toggle('bright',bright);toggle?.setAttribute('aria-pressed',String(bright));toggle?.setAttribute('aria-label',bright?'Switch to dark theme':'Switch to bright theme');window.dispatchEvent(new CustomEvent('omnicad-themechange',{detail:{bright}}));};
+      apply(saved==='bright');
+      toggle?.addEventListener('click',()=>{const bright=!body.classList.contains('bright');localStorage.setItem('omnicad-theme',bright?'bright':'dark');apply(bright);});
+
+      document.querySelectorAll('.quant-frame').forEach(frame=>{
+        const wrap=frame.querySelector('.quant-wrap');
+        const update=()=>frame.classList.toggle('is-overflowing',wrap.scrollWidth>wrap.clientWidth+1);
+        wrap.addEventListener('scroll',()=>{if(wrap.scrollLeft>4)frame.classList.add('has-scrolled')},{passive:true});
+        window.addEventListener('resize',update,{passive:true}); requestAnimationFrame(update);
       });
     })();
   </script>
