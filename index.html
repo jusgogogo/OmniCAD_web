@@ -524,6 +524,93 @@
   }
 </style>
 
+
+<style id="omnicad-v4-targeted-fixes">
+  /* V4 targeted fixes only — keep the supplied page template unchanged elsewhere. */
+
+  /* The supplied template expects 2+3+4 statistics figures. OmniCAD has four.
+     Reuse the same figures-left / explanation-right mosaic, adapted to a 2×2 plot grid. */
+  #statistics.results.metrics-results{
+    grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);
+    column-gap:58px;
+    row-gap:16px;
+    align-items:center;
+  }
+  #statistics .metrics-table{
+    display:block;
+    grid-column:1;
+    grid-row:1;
+    order:1;
+    background:transparent;
+    border:0;
+  }
+  #statistics .metrics-intro{
+    display:block;
+    grid-column:2;
+    grid-row:1;
+    order:2;
+    align-self:center;
+    margin:0;
+  }
+  #statistics .metrics-row.four{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin:0;
+  }
+  #statistics .metric-figure{
+    min-width:0;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#fff;
+  }
+  #statistics .metric-figure img{
+    display:block;
+    width:100%;
+    height:100%;
+    aspect-ratio:1.13 / 1;
+    object-fit:contain;
+    filter:none!important;
+    mix-blend-mode:normal!important;
+    background:#fff!important;
+  }
+
+  /* Use the paper's original dataset-overview colors; never theme-filter this figure. */
+  #benchmark .benchmark-original{
+    filter:none!important;
+    mix-blend-mode:normal!important;
+    opacity:1!important;
+    background:#fff;
+  }
+
+  /* The source video is 7680×1440. Hide browser controls and clip the bottom
+     32 source pixels (2.222...%) without re-encoding or rescaling the file. */
+  #showcase .qualitative-video-wrap{
+    position:relative;
+    overflow:hidden;
+    aspect-ratio:7680 / 1408;
+  }
+  #showcase .qualitative-video{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:102.272727%;
+    object-fit:cover;
+    object-position:top center;
+  }
+
+  @media(max-width:900px){
+    #statistics.results.metrics-results{grid-template-columns:1fr;row-gap:30px;}
+    #statistics .metrics-intro{grid-column:1;grid-row:1;order:1;}
+    #statistics .metrics-table{grid-column:1;grid-row:2;order:2;}
+  }
+  @media(max-width:560px){
+    #statistics .metrics-row.four{grid-template-columns:1fr;}
+    #statistics .metric-figure img{aspect-ratio:auto;height:auto;}
+  }
+</style>
+
 </head>
 <body>
   <nav class="nav shell">
@@ -570,7 +657,7 @@
           <p class="copy">Representative OmniCAD cases are presented in one continuous full-width video, keeping visual scale and comparison layout consistent across examples. The video preserves the original rendering colors and can be viewed full-screen for fine assembly details.</p>
         </div>
         <figure class="qualitative-video-wrap">
-          <video class="qualitative-video" autoplay loop muted playsinline controls preload="metadata" poster="./public/media/qualitative-results.png" aria-label="OmniCAD qualitative assembly examples">
+          <video class="qualitative-video" autoplay loop muted playsinline preload="metadata" poster="./public/media/qualitative-results.png" aria-label="OmniCAD qualitative assembly examples">
             <source src="./public/media/3D-interaction.mp4" type="video/mp4">
           </video>
         </figure>
@@ -587,7 +674,7 @@
         </div>
       </div>
       <div class="card">
-        <img src="./public/media/benchmark.png" alt="OmniCAD sample composition with component library, mate graph, ground-truth model, and cube-vertex renders">
+        <img class="benchmark-original" src="./figs/dataset_overview.png" alt="OmniCAD sample composition with component library, mate graph, ground-truth model, and cube-vertex renders">
         <div class="legend">
           <div><b>Component Library</b><small>Deduplicated OBJ parts</small></div>
           <div><b>Mate Graph</b><small>Component connectivity + mate type</small></div>
