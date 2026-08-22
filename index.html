@@ -501,10 +501,12 @@
   /* Preserve the supplied template's theme-aware image treatment.
      The benchmark overview is exempted below because it must keep the paper's authored colors. */
 
-  /* Qualitative Placement Examples is replaced by one full-width MP4 only; surrounding layout stays OmniLayout. */
-  .qualitative-video-wrap{margin:0;border:1px solid #244455;background:#071723;overflow:hidden;}
-  .qualitative-video{display:block;width:100%;height:auto;background:#071723;}
-  body.bright .qualitative-video-wrap{border-color:#a9cbd1;background:#fff;}
+  /* Qualitative Placement Examples embeds the existing interactive 3D site; surrounding layout stays OmniLayout. */
+  .qualitative-3d-wrap{margin:0;width:100%;height:960px;border:1px solid #244455;background:#fff;overflow:hidden;}
+  .qualitative-3d-wrap iframe{display:block;width:100%;height:100%;border:0;background:#fff;}
+  body.bright .qualitative-3d-wrap{border-color:#a9cbd1;background:#fff;}
+  @media(max-width:900px){.qualitative-3d-wrap{height:900px;}}
+  @media(max-width:560px){.qualitative-3d-wrap{height:860px;}}
 
   /* OmniCAD has four dataset-statistics figures; keep OmniLayout mosaic sizing. */
   .metrics-row.four{grid-template-columns:repeat(4,1fr);}
@@ -572,23 +574,6 @@
     mix-blend-mode:normal!important;
     opacity:1!important;
     background:#fff;
-  }
-
-  /* The source video is 7680×1440. Hide browser controls and clip the bottom
-     32 source pixels (2.222...%) without re-encoding or rescaling the file. */
-  #showcase .qualitative-video-wrap{
-    position:relative;
-    overflow:hidden;
-    aspect-ratio:7680 / 1408;
-  }
-  #showcase .qualitative-video{
-    position:absolute;
-    left:0;
-    top:0;
-    width:100%;
-    height:102.272727%;
-    object-fit:cover;
-    object-position:top center;
   }
 
   @media(max-width:900px){
@@ -721,13 +706,16 @@
         <div class="kicker light">Qualitative results</div>
         <div class="showcase-head">
           <h2>Qualitative assembly examples</h2>
-          <p class="copy">Representative OmniCAD cases are presented in one continuous full-width video, keeping visual scale and comparison layout consistent across examples. The video preserves the original rendering colors and can be viewed full-screen for fine assembly details.</p>
+          <p class="copy">Interactive OmniCAD assembly cases. Drag to rotate, scroll to zoom, and pan within each 3D result.</p>
         </div>
-        <figure class="qualitative-video-wrap">
-          <video class="qualitative-video" autoplay loop muted playsinline preload="metadata" poster="./public/media/qualitative-results.png" aria-label="OmniCAD qualitative assembly examples">
-            <source src="./public/media/3D-interaction.mp4" type="video/mp4">
-          </video>
-        </figure>
+        <div class="qualitative-3d-wrap">
+          <iframe
+            src="./public/media/qualitative_3d/index.html"
+            title="OmniCAD interactive qualitative assembly examples"
+            loading="lazy"
+            allowfullscreen
+          ></iframe>
+        </div>
       </div>
     </section>
 
