@@ -492,14 +492,11 @@
 
 <style id="omnicad-layout-fidelity">
   /* Keep OmniLayout geometry/typography; only adapt content-specific details requested for OmniCAD. */
-  h1,h2{ text-transform:none !important; }
-  .hero h2{font-size:clamp(23px,2.25vw,34px);line-height:1.14;letter-spacing:-.035em;font-weight:400;margin:0;max-width:720px;text-shadow:0 2px 18px #000;}
-  .hero-authors{max-width:740px;margin:17px 0 0;color:#c0d4de;font:10.5px/1.55 "Courier New",monospace;text-shadow:0 2px 12px #000;}
-  .hero-affiliations{max-width:720px;margin:8px 0 0;color:#83a7b7;font:9.5px/1.5 "Courier New",monospace;text-shadow:0 2px 12px #000;}
-  .hero .actions{margin-top:20px;}
-  body.bright .hero h2{color:#102f3d;text-shadow:0 2px 18px #fff;}
-  body.bright .hero-authors{color:#365f6e;text-shadow:0 2px 12px #fff;}
-  body.bright .hero-affiliations{color:#557582;text-shadow:0 2px 12px #fff;}
+  /* Opening hero follows the supplied OmniLayout/OmniMech code template exactly in structure: no author block, uppercase display typography. */
+  .hero h1,.hero h2{text-transform:uppercase !important;}
+  .hero h2{font-size:clamp(38px,4.7vw,62px);line-height:1.02;letter-spacing:-.055em;font-weight:400;margin:0;max-width:none;text-shadow:none;}
+  .hero .actions{margin-top:35px;}
+  body.bright .hero h2{color:#102f3d;text-shadow:none;}
 
   /* User-supplied paper figures/videos must retain authored colors. */
   img,body.bright img,body:not(.bright) img{filter:none !important;mix-blend-mode:normal !important;opacity:1 !important;}
@@ -516,11 +513,10 @@
   .metrics-intro h2{font-size:clamp(32px,3.5vw,50px);line-height:1.05;}
 
   @media(max-width:900px){
-    .hero-authors{font-size:10px}.hero-affiliations{font-size:9px}
     .metrics-row.four{grid-template-columns:repeat(2,1fr);}
   }
   @media(max-width:560px){
-    .hero h2{font-size:24px}.hero-authors{font-size:9.5px;line-height:1.45}.hero-affiliations{font-size:8.5px}.metrics-row.four{grid-template-columns:1fr;}
+    .metrics-row.four{grid-template-columns:1fr;}
   }
 </style>
 
@@ -634,8 +630,6 @@
       <div>
         <h1>OmniCAD</h1>
         <h2>A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies</h2>
-        <p class="hero-authors">Mingjia Wang* · Taiting Lu* · Ziwei Dong · Sisong Bei · Jingying Zeng · Runze Liu · Kaiyuan Lin · Hongxing Pan · Kai Zhang · Yizheng Hou · Yangshoudu Zheng · Chenchen Guo · Weiyuan Meng · Shubin Lyu · Zhijun Zheng · Dexu Wang · Xinyu Bai · Shurui Qian · Zhangzixin · Mengyu Pan · Guoliang Shi · Ling Ma · Yifan Yang · Qi He · Yi-Chao Chen · Yincheng Jin · Sung-Liang Chen† · Mahanth Gowda†</p>
-        <p class="hero-affiliations">Shanghai Jiao Tong University · Pennsylvania State University · Independent Researcher · Microsoft Research · Binghamton University</p>
         <div class="actions">
           <a class="button" href="./public/omnicad-paper.pdf" download="omnicad-paper.pdf">Download paper ↓</a>
           <a class="button dataset-button" href="./res/omnicad_samples.zip" download>Dataset Samples ↓</a>
