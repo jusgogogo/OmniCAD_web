@@ -653,6 +653,33 @@
   }
 </style>
 
+
+<style id="omnicad-v4-hero-spacing-button-fix">
+  /* Hero detail correction only: preserve the supplied template styling. */
+  @media(min-width:901px){
+    /* Slightly taller than the previous 2.8:1 crop so more of Figure 1 is visible
+       and the image baseline sits a little below the CTA row. */
+    .hero{aspect-ratio:2.55/1;}
+  }
+
+  /* Keep the original 13px / 700 typography, but restore the larger button box
+     and center the glyphs independently of Courier New's baseline metrics. */
+  .hero .button{
+    height:56px;
+    padding:0 19px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:700;
+    line-height:1;
+  }
+  .hero .button>span{
+    display:block;
+    transform:translateY(1px);
+  }
+</style>
+
 </head>
 <body>
   <nav class="nav shell">
@@ -677,9 +704,9 @@
         <h1>OmniCAD</h1>
         <h2>A Large-Scale Benchmark for 3D Spatial Reasoning in Robotics Assemblies</h2>
         <div class="actions">
-          <a class="button" href="./public/omnicad-paper.pdf" download="omnicad-paper.pdf">Download paper ↓</a>
-          <a class="button dataset-button" href="./res/omnicad_samples.zip" download>Dataset Samples ↓</a>
-          <a class="button dataset-button" href="./res/omnicad_code.zip" download>Code ↓</a>
+          <a class="button" href="./public/omnicad-paper.pdf" download="omnicad-paper.pdf"><span>Download paper ↓</span></a>
+          <a class="button dataset-button" href="./res/omnicad_samples.zip" download><span>Dataset Samples ↓</span></a>
+          <a class="button dataset-button" href="./res/omnicad_code.zip" download><span>Code ↓</span></a>
         </div>
       </div>
       <div class="heroart">
