@@ -1,0 +1,154 @@
+{
+  "assembly_id": "assem1_76084a0ee0",
+  "nodes": [
+    {
+      "component_id": "c00001",
+      "library_id": "lib00001",
+      "pose": {
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "orientation": {
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "component_id": "c00002",
+      "library_id": "lib00002",
+      "pose": {
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "orientation": {
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "component_id": "c00003",
+      "library_id": "lib00003",
+      "pose": {
+        "position": {
+          "x": 30.0,
+          "y": 80.0,
+          "z": -30.0
+        },
+        "orientation": {
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "component_id": "c00004",
+      "library_id": "lib00004",
+      "pose": {
+        "position": {
+          "x": 0.0,
+          "y": 120.0,
+          "z": 40.0
+        },
+        "orientation": {
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "component_id": "c00005",
+      "library_id": "lib00005",
+      "pose": {
+        "position": {
+          "x": 0.0,
+          "y": -120.0,
+          "z": 40.0
+        },
+        "orientation": {
+          "rx": 180.0,
+          "ry": 0.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "component_id": "c00006",
+      "library_id": "lib00006",
+      "pose": {
+        "position": {
+          "x": 80.0,
+          "y": 60.0,
+          "z": -60.0
+        },
+        "orientation": {
+          "rx": 0.0,
+          "ry": 30.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "component_id": "c00007",
+      "library_id": "lib00007",
+      "pose": {
+        "position": {
+          "x": -80.0,
+          "y": -60.0,
+          "z": -60.0
+        },
+        "orientation": {
+          "rx": 0.0,
+          "ry": -30.0,
+          "rz": 0.0
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source_component": "c00002",
+      "target_component": "c00001",
+      "mate_type": "MateConcentric"
+    },
+    {
+      "source_component": "c00003",
+      "target_component": "c00002",
+      "mate_type": "MateCoincident"
+    },
+    {
+      "source_component": "c00004",
+      "target_component": "c00002",
+      "mate_type": "MateHinge"
+    },
+    {
+      "source_component": "c00005",
+      "target_component": "c00002",
+      "mate_type": "MateHinge"
+    },
+    {
+      "source_component": "c00006",
+      "target_component": "c00002",
+      "mate_type": "MateHinge"
+    },
+    {
+      "source_component": "c00007",
+      "target_component": "c00002",
+      "mate_type": "MateHinge"
+    },
+    {
+      "source_component": "c00003",
+      "target_component": "c00001",
+      "mate_type": "MateConcentric"
+    }
+  ]
+}
