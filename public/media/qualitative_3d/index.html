@@ -11,14 +11,41 @@
     h1 { margin: 0 0 8px; font-size: 24px; font-weight: 760; }
     p { margin: 0; color: #596579; line-height: 1.45; }
     main { padding: 22px 24px 40px; }
+    .case-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin: 0 0 18px;
+    }
+    .case-nav button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid #d6dce6;
+      border-radius: 999px;
+      background: white;
+      color: #172033;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(21, 33, 56, 0.08);
+    }
+    .case-nav button:hover { background: #f4f6fa; }
+    .case-nav-title {
+      min-width: 210px;
+      text-align: center;
+      font-weight: 760;
+      font-size: 18px;
+    }
     .case-row {
-      display: grid;
+      display: none;
       grid-template-columns: 132px repeat(7, minmax(180px, 1fr));
       gap: 12px;
       align-items: stretch;
       margin-bottom: 18px;
       min-width: 1500px;
     }
+    .case-row.active { display: grid; }
     .case-title {
       display: flex;
       align-items: center;
@@ -81,7 +108,12 @@
     <p>Drag to rotate, scroll to zoom, right-drag to pan. Ground-truth STEP files are copied under <code>source_steps/</code>; prediction views are GLB assemblies generated from prediction JSON + component mesh OBJ.</p>
   </header>
   <main>
-    <div class="page-scroll"><section class="case-row"><div class="case-title">2129 Robotic Arm</div>
+    <div class="case-nav" aria-label="Sample navigation">
+      <button type="button" id="prevCase" aria-label="Previous sample">‹</button>
+      <div class="case-nav-title" id="caseNavTitle"></div>
+      <button type="button" id="nextCase" aria-label="Next sample">›</button>
+    </div>
+    <div class="page-scroll"><section class="case-row active" data-case-index="0"><div class="case-title">2129 Robotic Arm</div>
 <article class="viewer-card ">
   <div class="viewer-label">Library parts</div>
   <div class="viewer" data-src="models/2129_library_parts.glb?v=20260823_sampled_lit_palette_v10"><div class="empty-text">3D</div></div>
@@ -118,7 +150,7 @@
   <div class="source-note">same as GT</div>
 </article>
 </section>
-<section class="case-row"><div class="case-title">2149 SR10C</div>
+<section class="case-row" data-case-index="1"><div class="case-title">2149 SR10C</div>
 <article class="viewer-card ">
   <div class="viewer-label">Library parts</div>
   <div class="viewer" data-src="models/2149_library_parts.glb?v=20260823_sampled_lit_palette_v10"><div class="empty-text">3D</div></div>
@@ -155,7 +187,7 @@
   <div class="source-note">same as GT</div>
 </article>
 </section>
-<section class="case-row"><div class="case-title">2211 Assem1</div>
+<section class="case-row" data-case-index="2"><div class="case-title">2211 Assem1</div>
 <article class="viewer-card ">
   <div class="viewer-label">Library parts</div>
   <div class="viewer" data-src="models/2211_library_parts.glb?v=20260823_sampled_lit_palette_v10"><div class="empty-text">3D</div></div>
@@ -200,6 +232,7 @@
     import { RoomEnvironment } from 'https://esm.sh/three@0.170.0/examples/jsm/environments/RoomEnvironment.js';
 
     const loader = new GLTFLoader();
+    const initializedViewers = new WeakSet();
 
     function fitCamera(camera, controls, object) {
       const box = new THREE.Box3().setFromObject(object);
@@ -218,7 +251,8 @@
 
     function initViewer(el) {
       const src = el.dataset.src;
-      if (!src) return;
+      if (!src || initializedViewers.has(el)) return;
+      initializedViewers.add(el);
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -242,7 +276,7 @@
       controls.enableDamping = true;
       controls.dampingFactor = 0.06;
       controls.autoRotate = true;
-      controls.autoRotateSpeed = 0.9;
+      controls.autoRotateSpeed = 1.8;
       controls.enablePan = true;
 
       function resize() {
@@ -319,7 +353,31 @@
       animate();
     }
 
-    document.querySelectorAll('.viewer').forEach(initViewer);
+    const caseRows = Array.from(document.querySelectorAll('.case-row'));
+    const caseTitle = document.getElementById('caseNavTitle');
+    let activeCase = 0;
+
+    function showCase(index) {
+      if (!caseRows.length) return;
+      activeCase = (index + caseRows.length) % caseRows.length;
+      caseRows.forEach((row, i) => {
+        row.classList.toggle('active', i === activeCase);
+      });
+      const activeRow = caseRows[activeCase];
+      const title = activeRow.querySelector('.case-title')?.textContent?.trim() || '';
+      caseTitle.textContent = `${activeCase + 1} / ${caseRows.length} · ${title}`;
+      requestAnimationFrame(() => {
+        activeRow.querySelectorAll('.viewer').forEach(initViewer);
+      });
+    }
+
+    document.getElementById('prevCase').addEventListener('click', () => showCase(activeCase - 1));
+    document.getElementById('nextCase').addEventListener('click', () => showCase(activeCase + 1));
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') showCase(activeCase - 1);
+      if (event.key === 'ArrowRight') showCase(activeCase + 1);
+    });
+    showCase(0);
   </script>
 </body>
 </html>
