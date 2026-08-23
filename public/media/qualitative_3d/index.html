@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -98,6 +98,7 @@
       pointer-events: none;
     }
     .viewer[data-src] .empty-text { display: none; }
+    .viewer.load-error .empty-text { display: flex; font-size: 14px; padding: 12px; text-align: center; }
     .source-note { display: none; }
     .page-scroll { overflow-x: auto; padding-bottom: 14px; }
   </style>
@@ -105,13 +106,13 @@
 <body>
   <header>
     <h1>OmniMech-style Interactive 3D Assembly Comparison</h1>
-    <p>Drag to rotate, scroll to zoom, right-drag to pan. Ground-truth STEP files are copied under <code>source_steps/</code>; prediction views are GLB assemblies generated from prediction JSON + component mesh OBJ.</p>
+    <p>Drag to rotate, scroll to zoom, right-drag to pan.</p>
   </header>
   <main>
     <div class="case-nav" aria-label="Sample navigation">
-      <button type="button" id="prevCase" aria-label="Previous sample">‹</button>
+      <button type="button" id="prevCase" aria-label="Previous sample">&#8249;</button>
       <div class="case-nav-title" id="caseNavTitle"></div>
-      <button type="button" id="nextCase" aria-label="Next sample">›</button>
+      <button type="button" id="nextCase" aria-label="Next sample">&#8250;</button>
     </div>
     <div class="page-scroll"><section class="case-row active" data-case-index="0"><div class="case-title">2129 Robotic Arm</div>
 <article class="viewer-card ">
@@ -229,7 +230,6 @@
     import * as THREE from 'https://esm.sh/three@0.170.0';
     import { OrbitControls } from 'https://esm.sh/three@0.170.0/examples/jsm/controls/OrbitControls.js';
     import { GLTFLoader } from 'https://esm.sh/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-    import { RoomEnvironment } from 'https://esm.sh/three@0.170.0/examples/jsm/environments/RoomEnvironment.js';
 
     const loader = new GLTFLoader();
     const initializedViewers = new WeakSet();
@@ -253,7 +253,15 @@
       const src = el.dataset.src;
       if (!src || initializedViewers.has(el)) return;
       initializedViewers.add(el);
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      } catch (err) {
+        el.classList.add('load-error');
+        el.querySelector('.empty-text').textContent = `WEBGL ERROR: ${err?.message || err}`;
+        console.error(err);
+        return;
+      }
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.NoToneMapping;
@@ -261,7 +269,6 @@
       el.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
-      const pmrem = new THREE.PMREMGenerator(renderer);
       scene.environment = null;
       scene.add(new THREE.AmbientLight(0xffffff, 1.30));
       const key = new THREE.DirectionalLight(0xffffff, 0.54);
@@ -338,8 +345,8 @@
         resize();
         fitCamera(camera, controls, model);
       }, undefined, (err) => {
-        el.classList.add('empty');
-        el.querySelector('.empty-text').textContent = 'LOAD FAILED';
+        el.classList.add('load-error');
+        el.querySelector('.empty-text').textContent = `LOAD FAILED: ${src}`;
         console.error(err);
       });
 
@@ -365,7 +372,7 @@
       });
       const activeRow = caseRows[activeCase];
       const title = activeRow.querySelector('.case-title')?.textContent?.trim() || '';
-      caseTitle.textContent = `${activeCase + 1} / ${caseRows.length} · ${title}`;
+      caseTitle.textContent = `${activeCase + 1} / ${caseRows.length} - ${title}`;
       requestAnimationFrame(() => {
         activeRow.querySelectorAll('.viewer').forEach(initViewer);
       });
