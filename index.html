@@ -515,7 +515,7 @@
      The benchmark overview is exempted below because it must keep the paper's authored colors. */
 
   /* Qualitative Placement Examples embeds the existing interactive 3D site; surrounding layout stays OmniLayout. */
-  .qualitative-3d-wrap{margin:0;width:100%;height:auto;min-height:530px;border:0;background:transparent;overflow:hidden;}
+  .qualitative-3d-wrap{margin:0;width:100%;height:auto;min-height:530px;border:0;background:transparent;overflow:hidden;overflow-anchor:none;}
   .qualitative-3d-wrap iframe{display:block;width:100%;height:530px;border:0;background:transparent;overflow:hidden;}
   body.bright .qualitative-3d-wrap{border:0;background:transparent;}
   @media(max-width:900px){.qualitative-3d-wrap{min-height:2350px}.qualitative-3d-wrap iframe{height:2350px}}
@@ -810,6 +810,15 @@
   }
 </style>
 
+
+<script id="omnicad-refresh-scroll-control">
+  /* Reload should start predictably instead of restoring a stale deep-page position. */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('pageshow', () => {
+    if (!location.hash) window.scrollTo(0, 0);
+  });
+</script>
+
 </head>
 <body>
   <nav class="nav shell">
@@ -856,7 +865,7 @@
         <div class="qualitative-3d-wrap">
           <iframe
             id="qualitative3dFrame"
-            src="./public/media/qualitative_3d/index.html?v=2"
+            src="./public/media/qualitative_3d/index.html"
             title="OmniCAD interactive qualitative assembly examples"
             loading="eager"
             scrolling="no"
@@ -1307,11 +1316,25 @@
                 border-color:#31576a!important;
                 color:#d9f8ff!important;
               }
-              html.omnicad-host-dark .tag{
+              html.omnicad-host-dark .model-badge{
                 background:rgba(7,23,35,.94)!important;
                 border-color:#31576a!important;
+                box-shadow:0 3px 12px rgba(0,0,0,.24)!important;
+              }
+              html.omnicad-host-dark .tag{
+                background:transparent!important;
                 color:#bfeef7!important;
-                box-shadow:0 0 0 1px rgba(62,232,255,.08)!important;
+                box-shadow:none!important;
+              }
+              html.omnicad-host-dark .partcount{
+                background:#0b2230!important;
+                border-color:#31576a!important;
+                color:#8fc6d7!important;
+              }
+              html.omnicad-host-dark .libtitle-count{
+                background:#0b2230!important;
+                border-color:#31576a!important;
+                color:#8fc6d7!important;
               }
               html.omnicad-host-dark .libstrip::-webkit-scrollbar-track{
                 background:#081923!important;
@@ -1447,13 +1470,21 @@
               .failed{
                 min-height:0!important;
               }
-              .tag{
+              .model-badge{
                 left:7px!important;
                 top:7px!important;
                 max-width:calc(100% - 14px)!important;
-                padding:4px 6px 3px!important;
+                padding:5px 6px 4px!important;
+                gap:3px!important;
                 border-width:1px!important;
-                font-size:9px!important;
+              }
+              .tag{
+                font-size:8.5px!important;
+                line-height:1.12!important;
+              }
+              .partcount{
+                padding:2px 4px!important;
+                font-size:7.5px!important;
               }
               .failed{
                 font-size:clamp(13px,1.2vw,20px)!important;
@@ -1549,6 +1580,8 @@
           const doc = frame.contentDocument || frame.contentWindow.document;
           if (!doc) return;
 
+          const keepX = window.scrollX;
+          const keepY = window.scrollY;
           const h = Math.max(
             doc.documentElement ? doc.documentElement.scrollHeight : 0,
             doc.body ? doc.body.scrollHeight : 0,
@@ -1560,6 +1593,9 @@
             wrap.style.height = h + 'px';
             wrap.style.minHeight = h + 'px';
           }
+
+          /* Changing iframe height must not move the outer document viewport. */
+          requestAnimationFrame(() => window.scrollTo(keepX, keepY));
         } catch (e) {
           /* CSS fallback dimensions remain active. */
         }
