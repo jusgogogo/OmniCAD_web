@@ -502,11 +502,11 @@
      The benchmark overview is exempted below because it must keep the paper's authored colors. */
 
   /* Qualitative Placement Examples embeds the existing interactive 3D site; surrounding layout stays OmniLayout. */
-  .qualitative-3d-wrap{margin:0;width:100%;height:auto;min-height:460px;border:0;background:transparent;overflow:hidden;}
-  .qualitative-3d-wrap iframe{display:block;width:100%;height:460px;border:0;background:transparent;overflow:hidden;}
+  .qualitative-3d-wrap{margin:0;width:100%;height:auto;min-height:530px;border:0;background:transparent;overflow:hidden;}
+  .qualitative-3d-wrap iframe{display:block;width:100%;height:530px;border:0;background:transparent;overflow:hidden;}
   body.bright .qualitative-3d-wrap{border:0;background:transparent;}
-  @media(max-width:900px){.qualitative-3d-wrap{min-height:900px}.qualitative-3d-wrap iframe{height:900px}}
-  @media(max-width:560px){.qualitative-3d-wrap{min-height:1550px}.qualitative-3d-wrap iframe{height:1550px}}
+  @media(max-width:900px){.qualitative-3d-wrap{min-height:2350px}.qualitative-3d-wrap iframe{height:2350px}}
+  @media(max-width:560px){.qualitative-3d-wrap{min-height:4300px}.qualitative-3d-wrap iframe{height:4300px}}
 
   /* OmniCAD has four dataset-statistics figures; keep OmniLayout mosaic sizing. */
   .metrics-row.four{grid-template-columns:repeat(4,1fr);}
@@ -972,9 +972,10 @@
               }
 
               /*
-                The standalone viewer was authored for ~1920px width.
-                Inside OmniCAD, keep 3D cells close to square instead of
-                retaining the original 344px minimum height.
+                Preserve the standalone viewer's original proportions.
+                At its 1920px design width, one result cell is about
+                268px wide x 344px high, i.e. width:height ~= 0.78:1.
+                We scale that ratio down instead of forcing square cells.
               */
               .layout{
                 width:100%!important;
@@ -984,30 +985,45 @@
               }
               .left{
                 border-right-width:1px!important;
-                grid-template-rows:auto 112px!important;
+                grid-template-rows:minmax(0,1fr) 124px!important;
+                min-height:0!important;
               }
               .views8{
-                aspect-ratio:2 / 1!important;
                 min-height:0!important;
-                padding:9px 8px 6px!important;
+                padding:10px 9px 7px!important;
               }
               .libarea{
                 border-top-width:1px!important;
-                padding:5px 7px 7px!important;
+                padding:5px 7px 6px!important;
+                min-height:0!important;
+                overflow:visible!important;
               }
               .libtitle{
                 font-size:14px!important;
-                margin-bottom:3px!important;
+                margin:0 0 4px!important;
               }
+
+              /* Keep the original horizontal library strip and leave
+                 enough room for the scrollbar itself to be fully visible. */
               .libstrip{
-                height:86px!important;
+                height:99px!important;
                 gap:7px!important;
-                padding:1px 2px 4px!important;
-                scrollbar-width:thin!important;
+                padding:1px 2px 12px!important;
+                overflow-x:auto!important;
+                overflow-y:hidden!important;
+                scrollbar-gutter:stable!important;
+                scrollbar-width:auto!important;
+              }
+              .libstrip::-webkit-scrollbar{height:10px!important;}
+              .libstrip::-webkit-scrollbar-track{background:#edf4f5!important;}
+              .libstrip::-webkit-scrollbar-thumb{
+                background:#9fc9d0!important;
+                border-radius:8px!important;
+                border:2px solid #edf4f5!important;
               }
               .libpart{
-                flex:0 0 82px!important;
-                height:78px!important;
+                flex:0 0 94px!important;
+                height:89px!important;
                 min-height:0!important;
               }
 
@@ -1017,7 +1033,7 @@
               }
               .result{
                 min-height:0!important;
-                aspect-ratio:1 / 1!important;
+                aspect-ratio:268 / 344!important;
                 border-right-width:1px!important;
                 border-bottom-width:1px!important;
               }
@@ -1038,7 +1054,7 @@
                 letter-spacing:2px!important;
               }
 
-              /* Keep HiDPI WebGL output; no image/model downsampling. */
+              /* Keep the original HiDPI Three.js canvas. */
               .viewer canvas{
                 width:100%!important;
                 height:100%!important;
@@ -1051,22 +1067,28 @@
                 .left{
                   border-right:0!important;
                   border-bottom:1px solid var(--line)!important;
-                  grid-template-rows:auto 124px!important;
+                  grid-template-rows:minmax(330px,auto) 132px!important;
                 }
-                .views8{aspect-ratio:2 / 1!important;}
-                .libstrip{height:98px!important;}
-                .libpart{flex-basis:94px!important;height:90px!important;}
-                .results{grid-template-columns:repeat(4,minmax(0,1fr))!important;}
-                .result{aspect-ratio:1 / 1!important;}
+                .views8{min-height:330px!important;}
+                .libstrip{height:106px!important;padding-bottom:13px!important;}
+                .libpart{flex-basis:100px!important;height:94px!important;}
+                .results{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+                .result{aspect-ratio:268 / 344!important;}
               }
 
               @media(max-width:560px){
-                .results{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-                .views8{grid-template-columns:repeat(2,1fr)!important;grid-template-rows:repeat(4,1fr)!important;aspect-ratio:1 / 2!important;}
+                .left{grid-template-rows:minmax(520px,auto) 132px!important;}
+                .views8{
+                  min-height:520px!important;
+                  grid-template-columns:repeat(2,1fr)!important;
+                  grid-template-rows:repeat(4,1fr)!important;
+                }
                 .viewcell:nth-child(4n){border-right:3px dashed rgba(70,70,70,.18)!important;}
                 .viewcell:nth-child(2n){border-right:0!important;}
                 .viewcell:nth-child(n+5){border-bottom:3px dashed rgba(70,70,70,.18)!important;}
                 .viewcell:nth-child(n+7){border-bottom:0!important;}
+                .results{grid-template-columns:1fr!important;}
+                .result{aspect-ratio:268 / 344!important;}
               }
             `;
             doc.head.appendChild(style);
@@ -1084,7 +1106,7 @@
           const h = Math.max(
             doc.documentElement ? doc.documentElement.scrollHeight : 0,
             doc.body ? doc.body.scrollHeight : 0,
-            460
+            530
           );
 
           frame.style.height = h + 'px';
