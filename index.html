@@ -682,6 +682,93 @@
   }
 </style>
 
+
+<style id="omnicad-main-table-and-statistics-alignment">
+  /* Quantitative tables: balanced fixed column widths and centered content. */
+  #direct-results .quant-table{
+    width:1900px;
+    min-width:1900px;
+    table-layout:fixed;
+  }
+  #agentic-results .quant-table{
+    width:1980px;
+    min-width:1980px;
+    table-layout:fixed;
+  }
+
+  .quant-table th,
+  .quant-table td,
+  .quant-table tbody td.model-name,
+  .quant-table tbody td.variant,
+  .quant-table tbody td.model-name[rowspan]{
+    text-align:center!important;
+    vertical-align:middle!important;
+  }
+
+  /* Logical column widths: Model / Size / Input-or-Feedback / metrics. */
+  .quant-table th:nth-child(1),
+  .quant-table td.model-name{
+    width:190px;
+    min-width:190px;
+    max-width:190px;
+  }
+  .quant-table th:nth-child(2),
+  .quant-table td.size-cell{
+    width:80px;
+    min-width:80px;
+    max-width:80px;
+  }
+  #direct-results .quant-table th:nth-child(3),
+  #direct-results .quant-table td.variant{
+    width:160px;
+    min-width:160px;
+    max-width:160px;
+  }
+  #agentic-results .quant-table th:nth-child(3),
+  #agentic-results .quant-table td.variant{
+    width:170px;
+    min-width:170px;
+    max-width:170px;
+  }
+
+  /* Keep the first three logical columns aligned while horizontally scrolling. */
+  .quant-table th:nth-child(1),
+  .quant-table td.model-name{
+    position:sticky;
+    left:0;
+  }
+  .quant-table th:nth-child(2),
+  .quant-table td.size-cell{
+    position:sticky;
+    left:190px;
+    z-index:3;
+    background:#071723;
+  }
+  .quant-table th:nth-child(3),
+  .quant-table td.variant{
+    position:sticky;
+    left:270px;
+    z-index:3;
+    box-shadow:10px 0 14px -14px #3ee8ff;
+  }
+  .quant-table th:nth-child(1),
+  .quant-table th:nth-child(2),
+  .quant-table th:nth-child(3){
+    z-index:6;
+  }
+  body.bright .quant-table td.size-cell{
+    background:#fff;
+  }
+
+  /* Dataset Statistics: keep the white boxes untouched;
+     only slightly shrink and visually center the last three bar-chart images. */
+  #statistics .metrics-row.four .metric-figure:nth-child(n+2) img{
+    transform:translate(-1.5%,3.5%) scale(.92)!important;
+    transform-origin:50% 50%!important;
+    object-position:50% 50%!important;
+  }
+</style>
+
 </head>
 <body>
   <nav class="nav shell">
