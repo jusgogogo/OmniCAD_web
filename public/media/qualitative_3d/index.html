@@ -26,12 +26,14 @@
     .layout { display: grid; grid-template-columns: 42.5% 57.5%; border: 2px solid var(--line); background: white; min-height: 690px; }
     .left { border-right: 2px solid var(--line); display: grid; grid-template-rows: minmax(450px, 1fr) 190px; min-width: 0; }
     .views8 { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 0; padding: 22px 20px 14px; background: white; }
-    .viewcell { display: flex; align-items: center; justify-content: center; border-right: 1.25px dashed rgba(67,94,105,0.25); border-bottom: 1.25px dashed rgba(67,94,105,0.25); min-width: 0; background: #ffffff; }
+    .viewcell { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; border-right: 1.25px dashed rgba(67,94,105,0.25); border-bottom: 1.25px dashed rgba(67,94,105,0.25); min-width: 0; background: #ffffff; }
     .viewcell:nth-child(4n) { border-right: 0; }
     .viewcell:nth-child(n+5) { border-bottom: 0; }
-    .viewcell img { max-width: 98%; max-height: 98%; object-fit: contain; image-rendering: auto; filter: saturate(1.18) contrast(1.08) brightness(1.00); box-shadow: none; }
+    .viewcell::before { content: none; }
+    .viewcell::after { content: none; }
+    .viewcell img { position: relative; z-index: 1; max-width: 98%; max-height: 98%; object-fit: contain; image-rendering: auto; filter: saturate(1.18) contrast(1.08) brightness(1.00); box-shadow: none; }
     .case.case-05 .views8 { padding: 10px 8px 4px; }
-    .case.case-05 .viewcell { overflow: visible; }
+    .case.case-05 .viewcell { overflow: visible; background: #ffffff; }
     .case.case-05 .viewcell img { max-width: 116%; max-height: 116%; transform: scale(1.14); }
     .libarea { border-top: 2px solid var(--line); padding: 8px 12px 10px; background: white; min-width: 0; }
     .libtitle { font-family: Inter, Segoe UI, Arial, sans-serif; color: #111; font-size: 22px; margin: 0 0 6px; }
@@ -45,7 +47,8 @@
     .tag::after { display: none; }
     .viewer { width: 100%; height: 100%; min-height: inherit; background: white; cursor: grab; }
     .viewer canvas { width: 100%; height: 100%; display: block; }
-    .failed { height: 100%; min-height: inherit; display: flex; align-items: center; justify-content: center; text-align: center; font-size: clamp(20px, 1.65vw, 30px); letter-spacing: 3px; font-weight: 900; line-height: 1.25; }
+    .failed { height: 100%; min-height: inherit; display: flex; flex-direction:column; align-items: center; justify-content: center; text-align: center; font-size: clamp(20px, 1.65vw, 30px); letter-spacing: 3px; font-weight: 900; line-height: 1.25; }
+    .faildetail { margin-top:8px; max-width:90%; font-size:10px; line-height:1.35; letter-spacing:0; font-weight:700; color:#7a929a; overflow-wrap:anywhere; }
     .case { display: none; }
     .case.active { display: block; }
     @media (max-width: 1100px) {
@@ -169,19 +172,25 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 4));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
-      renderer.toneMapping = THREE.NoToneMapping;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 0.88;
       el.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
-      scene.add(new THREE.AmbientLight(0xffffff, 1.30));
+      scene.add(new THREE.HemisphereLight(0xffffff, 0xe8eef1, 0.72));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.46));
 
-      const key = new THREE.DirectionalLight(0xffffff, 0.54);
+      const key = new THREE.DirectionalLight(0xfff1d8, 1.18);
       key.position.set(2.4, -3.0, 4.8);
       scene.add(key);
 
-      const fill = new THREE.DirectionalLight(0xffffff, 0.24);
+      const fill = new THREE.DirectionalLight(0xe2f3ff, 0.42);
       fill.position.set(-3.2, 2.0, 2.2);
       scene.add(fill);
+
+      const rim = new THREE.DirectionalLight(0xffffff, 0.32);
+      rim.position.set(-1.8, -2.4, 5.2);
+      scene.add(rim);
 
       const camera = new THREE.PerspectiveCamera(36, 1, 0.01, 100000);
       const controls = new OrbitControls(camera, renderer.domElement);
@@ -198,46 +207,94 @@
         camera.updateProjectionMatrix();
       }
 
-      loader.load(el.dataset.src, (gltf) => {
+      async function loadModel() {
+        const src = el.dataset.src;
+        const url = new URL(src, document.baseURI);
+
+        try {
+          const response = await fetch(url.href, { cache: 'default' });
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status} ${response.statusText}`.trim());
+          }
+
+          const buffer = await response.arrayBuffer();
+          const bytes = new Uint8Array(buffer);
+          const prefix = new TextDecoder().decode(bytes.slice(0, Math.min(bytes.length, 220)));
+
+          if (prefix.startsWith('version https://git-lfs.github.com/spec/v1')) {
+            throw new Error('GIT LFS POINTER — GitHub Pages is serving the pointer, not the GLB');
+          }
+
+          if (bytes.length < 12 ||
+              bytes[0] !== 0x67 || bytes[1] !== 0x6c ||
+              bytes[2] !== 0x54 || bytes[3] !== 0x46) {
+            const shortText = prefix.replace(/\s+/g, ' ').slice(0, 90);
+            throw new Error(`NOT A GLB${shortText ? ': ' + shortText : ''}`);
+          }
+
+          const basePath = new URL('./', url.href).href;
+
+          loader.parse(buffer, basePath, (gltf) => {
         const model = gltf.scene;
         model.traverse((obj) => {
           if (!obj.isMesh) return;
 
-          // Use the actual COLOR_0 data stored in each GLB mesh.
-          // This is the same color source used by the original working viewer.
-          const baseColor = averageVertexColor(obj.geometry);
-          baseColor.offsetHSL(0, 0.08, 0.035);
-
-          obj.material = new THREE.MeshLambertMaterial({
-            color: baseColor,
-            emissive: baseColor.clone(),
-            emissiveIntensity: 0.38,
-            side: THREE.DoubleSide,
-            transparent: false,
-            opacity: 1.0,
-            toneMapped: false
-          });
-
           try {
-            const edgeGeom = new THREE.EdgesGeometry(obj.geometry, 38);
+            // Preserve the GLB's own component color so the interactive model
+            // stays aligned with the 8 rendered reference views.
+            const baseColor = displayColorFor(averageVertexColor(obj.geometry));
+            baseColor.offsetHSL(0, 0.06, -0.01);
+
+            obj.material = new THREE.MeshStandardMaterial({
+              color: baseColor,
+              emissive: baseColor.clone().multiplyScalar(0.035),
+              emissiveIntensity: 0.035,
+              metalness: 0.34,
+              roughness: 0.36,
+              side: THREE.DoubleSide,
+              transparent: false,
+              opacity: 1.0,
+              toneMapped: false
+            });
+
+            const edgeGeom = new THREE.EdgesGeometry(obj.geometry, 50);
             const edgeMat = new THREE.LineBasicMaterial({
-              color: 0x17212b,
+              color: 0x15242c,
               transparent: true,
-              opacity: 0.15,
+              opacity: 0.17,
               depthTest: true,
               depthWrite: false
             });
             const edges = new THREE.LineSegments(edgeGeom, edgeMat);
             edges.renderOrder = 2;
             obj.add(edges);
-          } catch (err) {}
+          } catch (styleErr) {
+            // Styling must never turn a valid GLB into LOAD FAILED.
+            console.warn('Mesh styling fallback:', styleErr);
+            if (!obj.material) {
+              obj.material = new THREE.MeshStandardMaterial({
+                color: 0xb7b9b8,
+                metalness: 0.20,
+                roughness: 0.48,
+                side: THREE.DoubleSide
+              });
+            }
+          }
         });
         scene.add(model);
         resize();
         fitCamera(camera, controls, model, el.classList.contains('libpart') ? 1.08 : 1.40);
-      }, undefined, () => {
-        el.innerHTML = '<div class="failed">LOAD<br>FAILED</div>';
-      });
+          }, (parseErr) => {
+            throw parseErr instanceof Error ? parseErr : new Error(String(parseErr));
+          });
+        } catch (err) {
+          const message = err && err.message ? err.message : String(err);
+          console.error('Actual GLB fetch/parse failure:', src, err);
+          el.innerHTML = `<div class="failed">LOAD<br>FAILED<span class="faildetail">${message}</span></div>`;
+        }
+      }
+
+      loadModel();
 
       const ro = new ResizeObserver(resize);
       ro.observe(el);
