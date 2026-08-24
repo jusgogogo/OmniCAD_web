@@ -26,14 +26,12 @@
     .layout { display: grid; grid-template-columns: 42.5% 57.5%; border: 2px solid var(--line); background: white; min-height: 690px; }
     .left { border-right: 2px solid var(--line); display: grid; grid-template-rows: minmax(450px, 1fr) 190px; min-width: 0; }
     .views8 { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 0; padding: 22px 20px 14px; background: white; }
-    .viewcell { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; border-right: 1.25px dashed rgba(67,94,105,0.25); border-bottom: 1.25px dashed rgba(67,94,105,0.25); min-width: 0; background: #ffffff; }
+    .viewcell { display: flex; align-items: center; justify-content: center; border-right: 1.25px dashed rgba(67,94,105,0.25); border-bottom: 1.25px dashed rgba(67,94,105,0.25); min-width: 0; }
     .viewcell:nth-child(4n) { border-right: 0; }
     .viewcell:nth-child(n+5) { border-bottom: 0; }
-    .viewcell::before { content: none; }
-    .viewcell::after { content: none; }
-    .viewcell img { position: relative; z-index: 1; max-width: 98%; max-height: 98%; object-fit: contain; image-rendering: auto; filter: saturate(1.18) contrast(1.08) brightness(1.00); box-shadow: none; }
+    .viewcell img { max-width: 98%; max-height: 98%; object-fit: contain; image-rendering: auto; filter: saturate(1.12) contrast(1.08) drop-shadow(0 5px 8px rgba(28,52,58,0.10)); }
     .case.case-05 .views8 { padding: 10px 8px 4px; }
-    .case.case-05 .viewcell { overflow: visible; background: #ffffff; }
+    .case.case-05 .viewcell { overflow: visible; }
     .case.case-05 .viewcell img { max-width: 116%; max-height: 116%; transform: scale(1.14); }
     .libarea { border-top: 2px solid var(--line); padding: 8px 12px 10px; background: white; min-width: 0; }
     .libtitle { font-family: Inter, Segoe UI, Arial, sans-serif; color: #111; font-size: 22px; margin: 0 0 6px; }
@@ -47,8 +45,7 @@
     .tag::after { display: none; }
     .viewer { width: 100%; height: 100%; min-height: inherit; background: white; cursor: grab; }
     .viewer canvas { width: 100%; height: 100%; display: block; }
-    .failed { height: 100%; min-height: inherit; display: flex; flex-direction:column; align-items: center; justify-content: center; text-align: center; font-size: clamp(20px, 1.65vw, 30px); letter-spacing: 3px; font-weight: 900; line-height: 1.25; }
-    .faildetail { margin-top:8px; max-width:90%; font-size:10px; line-height:1.35; letter-spacing:0; font-weight:700; color:#7a929a; overflow-wrap:anywhere; }
+    .failed { height: 100%; min-height: inherit; display: flex; align-items: center; justify-content: center; text-align: center; font-size: clamp(20px, 1.65vw, 30px); letter-spacing: 3px; font-weight: 900; line-height: 1.25; }
     .case { display: none; }
     .case.active { display: block; }
     @media (max-width: 1100px) {
@@ -76,6 +73,7 @@
     import * as THREE from 'https://esm.sh/three@0.170.0';
     import { OrbitControls } from 'https://esm.sh/three@0.170.0/examples/jsm/controls/OrbitControls.js';
     import { GLTFLoader } from 'https://esm.sh/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from 'https://esm.sh/three@0.170.0/examples/jsm/environments/RoomEnvironment.js';
 
     const manifest = {"samples": [{"case_key": "case-01", "case_no": 1, "sample_name": "2129_01871_02497_Robotic_Arm_23ea8dcb", "reference_views": ["reference_views/case-01_v01.png", "reference_views/case-01_v02.png", "reference_views/case-01_v03.png", "reference_views/case-01_v04.png", "reference_views/case-01_v05.png", "reference_views/case-01_v06.png", "reference_views/case-01_v07.png", "reference_views/case-01_v08.png"], "library_parts": [{"library_id": "lib00001", "glb": "models/case-01_lib00001.glb"}, {"library_id": "lib00002", "glb": "models/case-01_lib00002.glb"}, {"library_id": "lib00003", "glb": "models/case-01_lib00003.glb"}, {"library_id": "lib00004", "glb": "models/case-01_lib00004.glb"}, {"library_id": "lib00005", "glb": "models/case-01_lib00005.glb"}, {"library_id": "lib00006", "glb": "models/case-01_lib00006.glb"}, {"library_id": "lib00007", "glb": "models/case-01_lib00007.glb"}], "results": {"gt": "models/case-01_ground_truth.glb", "gpt55": "models/case-01_gpt55.glb", "gpt54mini": null, "claude48": "models/case-01_claude48.glb", "gemini31": "models/case-01_gemini31.glb", "gemini25": "models/case-01_gemini25.glb", "qwen37": "models/case-01_qwen37.glb", "qwen35": null}}, {"case_key": "case-02", "case_no": 2, "sample_name": "2149_0215_prepared_3824__02541_SR10C_953609b4", "reference_views": ["reference_views/case-02_v01.png", "reference_views/case-02_v02.png", "reference_views/case-02_v03.png", "reference_views/case-02_v04.png", "reference_views/case-02_v05.png", "reference_views/case-02_v06.png", "reference_views/case-02_v07.png", "reference_views/case-02_v08.png"], "library_parts": [{"library_id": "lib00001", "glb": "models/case-02_lib00001.glb"}, {"library_id": "lib00002", "glb": "models/case-02_lib00002.glb"}, {"library_id": "lib00003", "glb": "models/case-02_lib00003.glb"}, {"library_id": "lib00004", "glb": "models/case-02_lib00004.glb"}, {"library_id": "lib00005", "glb": "models/case-02_lib00005.glb"}, {"library_id": "lib00006", "glb": "models/case-02_lib00006.glb"}, {"library_id": "lib00007", "glb": "models/case-02_lib00007.glb"}], "results": {"gt": "models/case-02_ground_truth.glb", "gpt55": null, "gpt54mini": null, "claude48": null, "gemini31": null, "gemini25": null, "qwen37": null, "qwen35": null}}, {"case_key": "case-03", "case_no": 3, "sample_name": "2211_00712_00876_Assem1_45ed28d6", "reference_views": ["reference_views/case-03_v01.png", "reference_views/case-03_v02.png", "reference_views/case-03_v03.png", "reference_views/case-03_v04.png", "reference_views/case-03_v05.png", "reference_views/case-03_v06.png", "reference_views/case-03_v07.png", "reference_views/case-03_v08.png"], "library_parts": [{"library_id": "lib00001", "glb": "models/case-03_lib00001.glb"}, {"library_id": "lib00002", "glb": "models/case-03_lib00002.glb"}, {"library_id": "lib00003", "glb": "models/case-03_lib00003.glb"}, {"library_id": "lib00004", "glb": "models/case-03_lib00004.glb"}, {"library_id": "lib00005", "glb": "models/case-03_lib00005.glb"}, {"library_id": "lib00006", "glb": "models/case-03_lib00006.glb"}, {"library_id": "lib00007", "glb": "models/case-03_lib00007.glb"}], "results": {"gt": "models/case-03_ground_truth.glb", "gpt55": "models/case-03_gpt55.glb", "gpt54mini": null, "claude48": "models/case-03_claude48.glb", "gemini31": "models/case-03_gemini31.glb", "gemini25": "models/case-03_gemini25.glb", "qwen37": null, "qwen35": null}}, {"case_key": "case-04", "case_no": 4, "sample_name": "2652_0341_prepared_3824__01915_SEPC2826.07.Humanoid.Robot.Product_7f613a36", "reference_views": ["reference_views/case-04_v01.png", "reference_views/case-04_v02.png", "reference_views/case-04_v03.png", "reference_views/case-04_v04.png", "reference_views/case-04_v05.png", "reference_views/case-04_v06.png", "reference_views/case-04_v07.png", "reference_views/case-04_v08.png"], "library_parts": [{"library_id": "lib00001", "glb": "models/case-04_lib00001.glb"}, {"library_id": "lib00002", "glb": "models/case-04_lib00002.glb"}, {"library_id": "lib00003", "glb": "models/case-04_lib00003.glb"}, {"library_id": "lib00004", "glb": "models/case-04_lib00004.glb"}, {"library_id": "lib00005", "glb": "models/case-04_lib00005.glb"}, {"library_id": "lib00006", "glb": "models/case-04_lib00006.glb"}, {"library_id": "lib00007", "glb": "models/case-04_lib00007.glb"}, {"library_id": "lib00008", "glb": "models/case-04_lib00008.glb"}, {"library_id": "lib00009", "glb": "models/case-04_lib00009.glb"}, {"library_id": "lib00010", "glb": "models/case-04_lib00010.glb"}, {"library_id": "lib00011", "glb": "models/case-04_lib00011.glb"}], "results": {"gt": "models/case-04_ground_truth.glb", "gpt55": null, "gpt54mini": null, "claude48": null, "gemini31": null, "gemini25": null, "qwen37": null, "qwen35": null}}, {"case_key": "case-05", "case_no": 5, "sample_name": "2767_0389_prepared_3824__01763_KX.650_888498ce", "reference_views": ["reference_views/case-05_v01.png", "reference_views/case-05_v02.png", "reference_views/case-05_v03.png", "reference_views/case-05_v04.png", "reference_views/case-05_v05.png", "reference_views/case-05_v06.png", "reference_views/case-05_v07.png", "reference_views/case-05_v08.png"], "library_parts": [{"library_id": "lib00001", "glb": "models/case-05_lib00001.glb"}, {"library_id": "lib00002", "glb": "models/case-05_lib00002.glb"}, {"library_id": "lib00003", "glb": "models/case-05_lib00003.glb"}, {"library_id": "lib00004", "glb": "models/case-05_lib00004.glb"}, {"library_id": "lib00005", "glb": "models/case-05_lib00005.glb"}, {"library_id": "lib00006", "glb": "models/case-05_lib00006.glb"}, {"library_id": "lib00007", "glb": "models/case-05_lib00007.glb"}, {"library_id": "lib00008", "glb": "models/case-05_lib00008.glb"}, {"library_id": "lib00009", "glb": "models/case-05_lib00009.glb"}, {"library_id": "lib00010", "glb": "models/case-05_lib00010.glb"}, {"library_id": "lib00011", "glb": "models/case-05_lib00011.glb"}, {"library_id": "lib00012", "glb": "models/case-05_lib00012.glb"}, {"library_id": "lib00013", "glb": "models/case-05_lib00013.glb"}], "results": {"gt": "models/case-05_ground_truth.glb", "gpt55": null, "gpt54mini": null, "claude48": "models/case-05_claude48.glb", "gemini31": null, "gemini25": "models/case-05_gemini25.glb", "qwen37": null, "qwen35": null}}]};
     const resultColumns = [["gt", "GROUND TRUTH"], ["gpt55", "GPT 5.5"], ["gpt54mini", "GPT 5.4 MINI"], ["claude48", "CLAUDE OPUS 4.8"], ["gemini31", "GEMINI 3.1 PRO"], ["gemini25", "GEMINI 2.5 FLASH"], ["qwen37", "QWEN 3.7 PLUS"], ["qwen35", "QWEN 3.5 9B"]];
@@ -177,18 +175,17 @@
       el.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
-      scene.add(new THREE.HemisphereLight(0xffffff, 0xe8eef1, 0.72));
-      scene.add(new THREE.AmbientLight(0xffffff, 0.46));
-
-      const key = new THREE.DirectionalLight(0xfff1d8, 1.18);
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+      scene.add(new THREE.HemisphereLight(0xffffff, 0xdfe8ec, 0.58));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.28));
+      const key = new THREE.DirectionalLight(0xfff5dd, 1.16);
       key.position.set(2.4, -3.0, 4.8);
       scene.add(key);
-
-      const fill = new THREE.DirectionalLight(0xe2f3ff, 0.42);
+      const fill = new THREE.DirectionalLight(0xe7f7ff, 0.34);
       fill.position.set(-3.2, 2.0, 2.2);
       scene.add(fill);
-
-      const rim = new THREE.DirectionalLight(0xffffff, 0.32);
+      const rim = new THREE.DirectionalLight(0xffffff, 0.34);
       rim.position.set(-1.8, -2.4, 5.2);
       scene.add(rim);
 
@@ -207,94 +204,46 @@
         camera.updateProjectionMatrix();
       }
 
-      async function loadModel() {
-        const src = el.dataset.src;
-        const url = new URL(src, document.baseURI);
-
-        try {
-          const response = await fetch(url.href, { cache: 'default' });
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status} ${response.statusText}`.trim());
-          }
-
-          const buffer = await response.arrayBuffer();
-          const bytes = new Uint8Array(buffer);
-          const prefix = new TextDecoder().decode(bytes.slice(0, Math.min(bytes.length, 220)));
-
-          if (prefix.startsWith('version https://git-lfs.github.com/spec/v1')) {
-            throw new Error('GIT LFS POINTER — GitHub Pages is serving the pointer, not the GLB');
-          }
-
-          if (bytes.length < 12 ||
-              bytes[0] !== 0x67 || bytes[1] !== 0x6c ||
-              bytes[2] !== 0x54 || bytes[3] !== 0x46) {
-            const shortText = prefix.replace(/\s+/g, ' ').slice(0, 90);
-            throw new Error(`NOT A GLB${shortText ? ': ' + shortText : ''}`);
-          }
-
-          const basePath = new URL('./', url.href).href;
-
-          loader.parse(buffer, basePath, (gltf) => {
+      loader.load(el.dataset.src, (gltf) => {
         const model = gltf.scene;
+        let meshIndex = 0;
         model.traverse((obj) => {
           if (!obj.isMesh) return;
-
+          if (obj.geometry && obj.geometry.getAttribute('color')) {
+            obj.geometry.deleteAttribute('color');
+          }
+          if (obj.geometry) {
+            obj.geometry.computeVertexNormals();
+          }
+          const displayColor = componentDisplayColor(obj, meshIndex);
+          meshIndex += 1;
+          obj.material = new THREE.MeshStandardMaterial({
+            color: displayColor,
+              roughness: 0.56,
+              metalness: 0.04,
+              envMapIntensity: 0.18,
+            emissive: displayColor.clone().multiplyScalar(0.02),
+              emissiveIntensity: 0.018,
+            vertexColors: false,
+            side: THREE.DoubleSide,
+            transparent: false,
+            opacity: 1.0,
+            toneMapped: false
+          });
           try {
-            // Preserve the GLB's own component color so the interactive model
-            // stays aligned with the 8 rendered reference views.
-            const baseColor = displayColorFor(averageVertexColor(obj.geometry));
-            baseColor.offsetHSL(0, 0.06, -0.01);
-
-            obj.material = new THREE.MeshStandardMaterial({
-              color: baseColor,
-              emissive: baseColor.clone().multiplyScalar(0.035),
-              emissiveIntensity: 0.035,
-              metalness: 0.34,
-              roughness: 0.36,
-              side: THREE.DoubleSide,
-              transparent: false,
-              opacity: 1.0,
-              toneMapped: false
-            });
-
-            const edgeGeom = new THREE.EdgesGeometry(obj.geometry, 50);
-            const edgeMat = new THREE.LineBasicMaterial({
-              color: 0x15242c,
-              transparent: true,
-              opacity: 0.17,
-              depthTest: true,
-              depthWrite: false
-            });
+            const edgeGeom = new THREE.EdgesGeometry(obj.geometry, 78);
+            const edgeMat = new THREE.LineBasicMaterial({ color: 0x13222a, transparent: true, opacity: 0.10, depthTest: true, depthWrite: false });
             const edges = new THREE.LineSegments(edgeGeom, edgeMat);
             edges.renderOrder = 2;
             obj.add(edges);
-          } catch (styleErr) {
-            // Styling must never turn a valid GLB into LOAD FAILED.
-            console.warn('Mesh styling fallback:', styleErr);
-            if (!obj.material) {
-              obj.material = new THREE.MeshStandardMaterial({
-                color: 0xb7b9b8,
-                metalness: 0.20,
-                roughness: 0.48,
-                side: THREE.DoubleSide
-              });
-            }
-          }
+          } catch (err) {}
         });
         scene.add(model);
         resize();
         fitCamera(camera, controls, model, el.classList.contains('libpart') ? 1.08 : 1.40);
-          }, (parseErr) => {
-            throw parseErr instanceof Error ? parseErr : new Error(String(parseErr));
-          });
-        } catch (err) {
-          const message = err && err.message ? err.message : String(err);
-          console.error('Actual GLB fetch/parse failure:', src, err);
-          el.innerHTML = `<div class="failed">LOAD<br>FAILED<span class="faildetail">${message}</span></div>`;
-        }
-      }
-
-      loadModel();
+      }, undefined, () => {
+        el.innerHTML = '<div class="failed">LOAD<br>FAILED</div>';
+      });
 
       const ro = new ResizeObserver(resize);
       ro.observe(el);
