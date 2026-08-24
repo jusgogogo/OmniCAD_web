@@ -73,7 +73,6 @@
     import * as THREE from 'https://esm.sh/three@0.170.0';
     import { OrbitControls } from 'https://esm.sh/three@0.170.0/examples/jsm/controls/OrbitControls.js';
     import { GLTFLoader } from 'https://esm.sh/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-    import { RoomEnvironment } from 'https://esm.sh/three@0.170.0/examples/jsm/environments/RoomEnvironment.js';
 
     const manifest = {"samples": [{"case_key": "case-01", "case_no": 1, "sample_name": "2129_01871_02497_Robotic_Arm_23ea8dcb", "reference_views": ["reference_views/case-01_v01.png", "reference_views/case-01_v02.png", "reference_views/case-01_v03.png", "reference_views/case-01_v04.png", "reference_views/case-01_v05.png", "reference_views/case-01_v06.png", "reference_views/case-01_v07.png", "reference_views/case-01_v08.png"], "library_parts": [{"library_id": "lib00001", "glb": "models/case-01_lib00001.glb"}, {"library_id": "lib00002", "glb": "models/case-01_lib00002.glb"}, {"library_id": "lib00003", "glb": "models/case-01_lib00003.glb"}, {"library_id": "lib00004", "glb": "models/case-01_lib00004.glb"}, {"library_id": "lib00005", "glb": "models/case-01_lib00005.glb"}, {"library_id": "lib00006", "glb": "models/case-01_lib00006.glb"}, {"library_id": "lib00007", "glb": "models/case-01_lib00007.glb"}], "results": {"gt": "models/case-01_ground_truth.glb", "gpt55": "models/case-01_gpt55.glb", "gpt54mini": null, "claude48": "models/case-01_claude48.glb", "gemini31": "models/case-01_gemini31.glb", "gemini25": "models/case-01_gemini25.glb", "qwen37": "models/case-01_qwen37.glb", "qwen35": null}}, {"case_key": "case-02", "case_no": 2, "sample_name": "2149_0215_prepared_3824__02541_SR10C_953609b4", "reference_views": ["reference_views/case-02_v01.png", "reference_views/case-02_v02.png", "reference_views/case-02_v03.png", "reference_views/case-02_v04.png", "reference_views/case-02_v05.png", "reference_views/case-02_v06.png", "reference_views/case-02_v07.png", "reference_views/case-02_v08.png"], "library_parts": [{"library_id": "lib00001", "glb": "models/case-02_lib00001.glb"}, {"library_id": "lib00002", "glb": "models/case-02_lib00002.glb"}, {"library_id": "lib00003", "glb": "models/case-02_lib00003.glb"}, {"library_id": "lib00004", "glb": "models/case-02_lib00004.glb"}, {"library_id": "lib00005", "glb": "models/case-02_lib00005.glb"}, {"library_id": "lib00006", "glb": "models/case-02_lib00006.glb"}, {"library_id": "lib00007", "glb": "models/case-02_lib00007.glb"}], "results": {"gt": "models/case-02_ground_truth.glb", "gpt55": null, "gpt54mini": null, "claude48": null, "gemini31": null, "gemini25": null, "qwen37": null, "qwen35": null}}, {"case_key": "case-03", "case_no": 3, "sample_name": "2211_00712_00876_Assem1_45ed28d6", "reference_views": ["reference_views/case-03_v01.png", "reference_views/case-03_v02.png", "reference_views/case-03_v03.png", "reference_views/case-03_v04.png", "reference_views/case-03_v05.png", "reference_views/case-03_v06.png", "reference_views/case-03_v07.png", "reference_views/case-03_v08.png"], "library_parts": [{"library_id": "lib00001", "glb": "models/case-03_lib00001.glb"}, {"library_id": "lib00002", "glb": "models/case-03_lib00002.glb"}, {"library_id": "lib00003", "glb": "models/case-03_lib00003.glb"}, {"library_id": "lib00004", "glb": "models/case-03_lib00004.glb"}, {"library_id": "lib00005", "glb": "models/case-03_lib00005.glb"}, {"library_id": "lib00006", "glb": "models/case-03_lib00006.glb"}, {"library_id": "lib00007", "glb": "models/case-03_lib00007.glb"}], "results": {"gt": "models/case-03_ground_truth.glb", "gpt55": "models/case-03_gpt55.glb", "gpt54mini": null, "claude48": "models/case-03_claude48.glb", "gemini31": "models/case-03_gemini31.glb", "gemini25": "models/case-03_gemini25.glb", "qwen37": null, "qwen35": null}}, {"case_key": "case-04", "case_no": 4, "sample_name": "2652_0341_prepared_3824__01915_SEPC2826.07.Humanoid.Robot.Product_7f613a36", "reference_views": ["reference_views/case-04_v01.png", "reference_views/case-04_v02.png", "reference_views/case-04_v03.png", "reference_views/case-04_v04.png", "reference_views/case-04_v05.png", "reference_views/case-04_v06.png", "reference_views/case-04_v07.png", "reference_views/case-04_v08.png"], "library_parts": [{"library_id": "lib00001", "glb": "models/case-04_lib00001.glb"}, {"library_id": "lib00002", "glb": "models/case-04_lib00002.glb"}, {"library_id": "lib00003", "glb": "models/case-04_lib00003.glb"}, {"library_id": "lib00004", "glb": "models/case-04_lib00004.glb"}, {"library_id": "lib00005", "glb": "models/case-04_lib00005.glb"}, {"library_id": "lib00006", "glb": "models/case-04_lib00006.glb"}, {"library_id": "lib00007", "glb": "models/case-04_lib00007.glb"}, {"library_id": "lib00008", "glb": "models/case-04_lib00008.glb"}, {"library_id": "lib00009", "glb": "models/case-04_lib00009.glb"}, {"library_id": "lib00010", "glb": "models/case-04_lib00010.glb"}, {"library_id": "lib00011", "glb": "models/case-04_lib00011.glb"}], "results": {"gt": "models/case-04_ground_truth.glb", "gpt55": null, "gpt54mini": null, "claude48": null, "gemini31": null, "gemini25": null, "qwen37": null, "qwen35": null}}, {"case_key": "case-05", "case_no": 5, "sample_name": "2767_0389_prepared_3824__01763_KX.650_888498ce", "reference_views": ["reference_views/case-05_v01.png", "reference_views/case-05_v02.png", "reference_views/case-05_v03.png", "reference_views/case-05_v04.png", "reference_views/case-05_v05.png", "reference_views/case-05_v06.png", "reference_views/case-05_v07.png", "reference_views/case-05_v08.png"], "library_parts": [{"library_id": "lib00001", "glb": "models/case-05_lib00001.glb"}, {"library_id": "lib00002", "glb": "models/case-05_lib00002.glb"}, {"library_id": "lib00003", "glb": "models/case-05_lib00003.glb"}, {"library_id": "lib00004", "glb": "models/case-05_lib00004.glb"}, {"library_id": "lib00005", "glb": "models/case-05_lib00005.glb"}, {"library_id": "lib00006", "glb": "models/case-05_lib00006.glb"}, {"library_id": "lib00007", "glb": "models/case-05_lib00007.glb"}, {"library_id": "lib00008", "glb": "models/case-05_lib00008.glb"}, {"library_id": "lib00009", "glb": "models/case-05_lib00009.glb"}, {"library_id": "lib00010", "glb": "models/case-05_lib00010.glb"}, {"library_id": "lib00011", "glb": "models/case-05_lib00011.glb"}, {"library_id": "lib00012", "glb": "models/case-05_lib00012.glb"}, {"library_id": "lib00013", "glb": "models/case-05_lib00013.glb"}], "results": {"gt": "models/case-05_ground_truth.glb", "gpt55": null, "gpt54mini": null, "claude48": "models/case-05_claude48.glb", "gemini31": null, "gemini25": "models/case-05_gemini25.glb", "qwen37": null, "qwen35": null}}]};
     const resultColumns = [["gt", "GROUND TRUTH"], ["gpt55", "GPT 5.5"], ["gpt54mini", "GPT 5.4 MINI"], ["claude48", "CLAUDE OPUS 4.8"], ["gemini31", "GEMINI 3.1 PRO"], ["gemini25", "GEMINI 2.5 FLASH"], ["qwen37", "QWEN 3.7 PLUS"], ["qwen35", "QWEN 3.5 9B"]];
@@ -170,24 +169,19 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 4));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 0.88;
+      renderer.toneMapping = THREE.NoToneMapping;
       el.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
-      const pmrem = new THREE.PMREMGenerator(renderer);
-      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-      scene.add(new THREE.HemisphereLight(0xffffff, 0xdfe8ec, 0.58));
-      scene.add(new THREE.AmbientLight(0xffffff, 0.28));
-      const key = new THREE.DirectionalLight(0xfff5dd, 1.16);
+      scene.add(new THREE.AmbientLight(0xffffff, 1.30));
+
+      const key = new THREE.DirectionalLight(0xffffff, 0.54);
       key.position.set(2.4, -3.0, 4.8);
       scene.add(key);
-      const fill = new THREE.DirectionalLight(0xe7f7ff, 0.34);
+
+      const fill = new THREE.DirectionalLight(0xffffff, 0.24);
       fill.position.set(-3.2, 2.0, 2.2);
       scene.add(fill);
-      const rim = new THREE.DirectionalLight(0xffffff, 0.34);
-      rim.position.set(-1.8, -2.4, 5.2);
-      scene.add(rim);
 
       const camera = new THREE.PerspectiveCamera(36, 1, 0.01, 100000);
       const controls = new OrbitControls(camera, renderer.domElement);
@@ -206,33 +200,33 @@
 
       loader.load(el.dataset.src, (gltf) => {
         const model = gltf.scene;
-        let meshIndex = 0;
         model.traverse((obj) => {
           if (!obj.isMesh) return;
-          if (obj.geometry && obj.geometry.getAttribute('color')) {
-            obj.geometry.deleteAttribute('color');
-          }
-          if (obj.geometry) {
-            obj.geometry.computeVertexNormals();
-          }
-          const displayColor = componentDisplayColor(obj, meshIndex);
-          meshIndex += 1;
-          obj.material = new THREE.MeshStandardMaterial({
-            color: displayColor,
-              roughness: 0.56,
-              metalness: 0.04,
-              envMapIntensity: 0.18,
-            emissive: displayColor.clone().multiplyScalar(0.02),
-              emissiveIntensity: 0.018,
-            vertexColors: false,
+
+          // Use the actual COLOR_0 data stored in each GLB mesh.
+          // This is the same color source used by the original working viewer.
+          const baseColor = averageVertexColor(obj.geometry);
+          baseColor.offsetHSL(0, 0.08, 0.035);
+
+          obj.material = new THREE.MeshLambertMaterial({
+            color: baseColor,
+            emissive: baseColor.clone(),
+            emissiveIntensity: 0.38,
             side: THREE.DoubleSide,
             transparent: false,
             opacity: 1.0,
             toneMapped: false
           });
+
           try {
-            const edgeGeom = new THREE.EdgesGeometry(obj.geometry, 78);
-            const edgeMat = new THREE.LineBasicMaterial({ color: 0x13222a, transparent: true, opacity: 0.10, depthTest: true, depthWrite: false });
+            const edgeGeom = new THREE.EdgesGeometry(obj.geometry, 38);
+            const edgeMat = new THREE.LineBasicMaterial({
+              color: 0x17212b,
+              transparent: true,
+              opacity: 0.15,
+              depthTest: true,
+              depthWrite: false
+            });
             const edges = new THREE.LineSegments(edgeGeom, edgeMat);
             edges.renderOrder = 2;
             obj.add(edges);
