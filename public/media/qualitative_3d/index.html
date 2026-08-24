@@ -172,25 +172,19 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 4));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 0.88;
+      renderer.toneMapping = THREE.NoToneMapping;
       el.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
-      scene.add(new THREE.HemisphereLight(0xffffff, 0xe8eef1, 0.72));
-      scene.add(new THREE.AmbientLight(0xffffff, 0.46));
+      scene.add(new THREE.AmbientLight(0xffffff, 1.30));
 
-      const key = new THREE.DirectionalLight(0xfff1d8, 1.18);
+      const key = new THREE.DirectionalLight(0xffffff, 0.54);
       key.position.set(2.4, -3.0, 4.8);
       scene.add(key);
 
-      const fill = new THREE.DirectionalLight(0xe2f3ff, 0.42);
+      const fill = new THREE.DirectionalLight(0xffffff, 0.24);
       fill.position.set(-3.2, 2.0, 2.2);
       scene.add(fill);
-
-      const rim = new THREE.DirectionalLight(0xffffff, 0.32);
-      rim.position.set(-1.8, -2.4, 5.2);
-      scene.add(rim);
 
       const camera = new THREE.PerspectiveCamera(36, 1, 0.01, 100000);
       const controls = new OrbitControls(camera, renderer.domElement);
@@ -207,94 +201,46 @@
         camera.updateProjectionMatrix();
       }
 
-      async function loadModel() {
-        const src = el.dataset.src;
-        const url = new URL(src, document.baseURI);
-
-        try {
-          const response = await fetch(url.href, { cache: 'default' });
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status} ${response.statusText}`.trim());
-          }
-
-          const buffer = await response.arrayBuffer();
-          const bytes = new Uint8Array(buffer);
-          const prefix = new TextDecoder().decode(bytes.slice(0, Math.min(bytes.length, 220)));
-
-          if (prefix.startsWith('version https://git-lfs.github.com/spec/v1')) {
-            throw new Error('GIT LFS POINTER — GitHub Pages is serving the pointer, not the GLB');
-          }
-
-          if (bytes.length < 12 ||
-              bytes[0] !== 0x67 || bytes[1] !== 0x6c ||
-              bytes[2] !== 0x54 || bytes[3] !== 0x46) {
-            const shortText = prefix.replace(/\s+/g, ' ').slice(0, 90);
-            throw new Error(`NOT A GLB${shortText ? ': ' + shortText : ''}`);
-          }
-
-          const basePath = new URL('./', url.href).href;
-
-          loader.parse(buffer, basePath, (gltf) => {
+      loader.load(el.dataset.src, (gltf) => {
         const model = gltf.scene;
         model.traverse((obj) => {
           if (!obj.isMesh) return;
 
+          // Use the actual COLOR_0 data stored in each GLB mesh.
+          // This is the same color source used by the original working viewer.
+          const baseColor = averageVertexColor(obj.geometry);
+          baseColor.offsetHSL(0, 0.08, 0.035);
+
+          obj.material = new THREE.MeshLambertMaterial({
+            color: baseColor,
+            emissive: baseColor.clone(),
+            emissiveIntensity: 0.38,
+            side: THREE.DoubleSide,
+            transparent: false,
+            opacity: 1.0,
+            toneMapped: false
+          });
+
           try {
-            // Preserve the GLB's own component color so the interactive model
-            // stays aligned with the 8 rendered reference views.
-            const baseColor = displayColorFor(averageVertexColor(obj.geometry));
-            baseColor.offsetHSL(0, 0.06, -0.01);
-
-            obj.material = new THREE.MeshStandardMaterial({
-              color: baseColor,
-              emissive: baseColor.clone().multiplyScalar(0.035),
-              emissiveIntensity: 0.035,
-              metalness: 0.34,
-              roughness: 0.36,
-              side: THREE.DoubleSide,
-              transparent: false,
-              opacity: 1.0,
-              toneMapped: false
-            });
-
-            const edgeGeom = new THREE.EdgesGeometry(obj.geometry, 50);
+            const edgeGeom = new THREE.EdgesGeometry(obj.geometry, 38);
             const edgeMat = new THREE.LineBasicMaterial({
-              color: 0x15242c,
+              color: 0x17212b,
               transparent: true,
-              opacity: 0.17,
+              opacity: 0.15,
               depthTest: true,
               depthWrite: false
             });
             const edges = new THREE.LineSegments(edgeGeom, edgeMat);
             edges.renderOrder = 2;
             obj.add(edges);
-          } catch (styleErr) {
-            // Styling must never turn a valid GLB into LOAD FAILED.
-            console.warn('Mesh styling fallback:', styleErr);
-            if (!obj.material) {
-              obj.material = new THREE.MeshStandardMaterial({
-                color: 0xb7b9b8,
-                metalness: 0.20,
-                roughness: 0.48,
-                side: THREE.DoubleSide
-              });
-            }
-          }
+          } catch (err) {}
         });
         scene.add(model);
         resize();
         fitCamera(camera, controls, model, el.classList.contains('libpart') ? 0.84 : 1.02);
-          }, (parseErr) => {
-            throw parseErr instanceof Error ? parseErr : new Error(String(parseErr));
-          });
-        } catch (err) {
-          const message = err && err.message ? err.message : String(err);
-          console.error('Actual GLB fetch/parse failure:', src, err);
-          el.innerHTML = `<div class="failed">LOAD<br>FAILED<span class="faildetail">${message}</span></div>`;
-        }
-      }
-
-      loadModel();
+      }, undefined, () => {
+        el.innerHTML = '<div class="failed">LOAD<br>FAILED</div>';
+      });
 
       const ro = new ResizeObserver(resize);
       ro.observe(el);
