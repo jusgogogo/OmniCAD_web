@@ -1457,18 +1457,22 @@
               }
 
               .results{
-                grid-template-rows:repeat(2,auto)!important;
-                align-content:start!important;
+                grid-template-rows:repeat(2,minmax(0,1fr))!important;
+                align-content:stretch!important;
+                align-self:stretch!important;
+                height:100%!important;
               }
               .result{
                 min-height:0!important;
-                aspect-ratio:268 / 344!important;
+                height:auto!important;
+                aspect-ratio:auto!important;
                 border-right-width:1px!important;
                 border-bottom-width:1px!important;
               }
               .viewer,
               .failed{
                 min-height:0!important;
+                height:100%!important;
               }
               .model-badge{
                 left:7px!important;
@@ -1509,8 +1513,8 @@
                 .views8{min-height:330px!important;}
                 .libstrip{height:106px!important;padding-bottom:13px!important;}
                 .libpart{flex-basis:100px!important;height:94px!important;}
-                .results{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-                .result{aspect-ratio:268 / 344!important;}
+                .results{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(4,minmax(0,1fr))!important;align-content:stretch!important;height:auto!important;}
+                .result{aspect-ratio:auto!important;height:auto!important;min-height:240px!important;}
               }
 
               @media(max-width:560px){
@@ -1524,8 +1528,8 @@
                 .viewcell:nth-child(2n){border-right:0!important;}
                 .viewcell:nth-child(n+5){border-bottom:3px dashed rgba(70,70,70,.18)!important;}
                 .viewcell:nth-child(n+7){border-bottom:0!important;}
-                .results{grid-template-columns:1fr!important;}
-                .result{aspect-ratio:268 / 344!important;}
+                .results{grid-template-columns:1fr!important;grid-template-rows:none!important;height:auto!important;}
+                .result{aspect-ratio:auto!important;height:auto!important;min-height:260px!important;}
               }
             `;
             doc.head.appendChild(style);
