@@ -1372,21 +1372,17 @@
                 268px wide x 344px high, i.e. width:height ~= 0.78:1.
                 We scale that ratio down instead of forcing square cells.
               */
-              /* Geometry only: follow the supplied standalone index proportions.
-                 Original reference geometry is 1920×690, left:right = 42.5:57.5,
-                 and the left column is approximately 500:190 vertically. */
               .layout{
                 width:100%!important;
-                height:auto!important;
                 min-height:0!important;
-                aspect-ratio:1920 / 690!important;
-                grid-template-columns:42.5% 57.5%!important;
                 border-width:1px!important;
                 align-items:stretch!important;
               }
               .left{
                 border-right-width:1px!important;
-                grid-template-rows:72.46% 27.54%!important;
+                /* Only copy the supplied reference's INTERNAL frame ratio:
+                   reference area : library area ~= 500 : 190. */
+                grid-template-rows:minmax(0,72.46fr) minmax(0,27.54fr)!important;
                 min-height:0!important;
               }
               .views8{
@@ -1510,7 +1506,7 @@
 
               @media(max-width:1100px){
                 .casebar{width:100%!important;}
-                .layout{grid-template-columns:1fr!important;aspect-ratio:auto!important;height:auto!important;}
+                .layout{grid-template-columns:1fr!important;}
                 .left{
                   border-right:0!important;
                   border-bottom:1px solid var(--line)!important;
