@@ -249,7 +249,7 @@
         });
         scene.add(model);
         resize();
-        fitCamera(camera, controls, model, el.classList.contains('libpart') ? 0.92 : 1.40);
+        fitCamera(camera, controls, model, el.classList.contains('libpart') ? 1.00 : 1.40);
       }, undefined, () => {
         el.innerHTML = '<div class="failed">LOAD<br>FAILED</div>';
       });
