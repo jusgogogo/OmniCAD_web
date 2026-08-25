@@ -27,14 +27,8 @@
     .left { border-right: 2px solid var(--line); display: grid; grid-template-rows: minmax(450px, 1fr) 190px; min-width: 0; }
     .viewsarea { min-width:0; min-height:0; display:flex; flex-direction:column; background:white; }
     .viewtitle { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 12px 0; margin:0; color:var(--ink); font-family:"Courier New",ui-monospace,monospace; }
-    .views8 { flex:1; min-height:0; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 0; padding: 10px 20px 14px; background: white; }
-    .viewcell { display: flex; align-items: center; justify-content: center; border-right: 1.25px dashed rgba(67,94,105,0.25); border-bottom: 1.25px dashed rgba(67,94,105,0.25); min-width: 0; }
-    .viewcell:nth-child(4n) { border-right: 0; }
-    .viewcell:nth-child(n+5) { border-bottom: 0; }
-    .viewcell img { max-width: 98%; max-height: 98%; object-fit: contain; image-rendering: auto; filter: saturate(1.12) contrast(1.08); box-shadow: none; border: 0; outline: 0; background: transparent; }
-    .case.case-05 .views8 { padding: 10px 8px 4px; }
-    .case.case-05 .viewcell { overflow: visible; }
-    .case.case-05 .viewcell img { max-width: 116%; max-height: 116%; transform: scale(1.14); }
+    .composite-view { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; padding:8px 10px 10px; background:white; overflow:hidden; }
+    .composite-view img { display:block; width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; object-position:center; image-rendering:auto; border:0; outline:0; box-shadow:none; background:transparent; }
     .libarea { border-top: 2px solid var(--line); padding: 9px 12px 10px; background: white; min-width: 0; }
     .libtitle { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 7px; color:var(--ink); font-family:"Courier New",ui-monospace,monospace; }
     .libtitle-main { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
@@ -98,8 +92,8 @@
             <aside class="left">
               <div class="viewsarea">
                 <div class="viewtitle"><span class="libtitle-main">REFERENCE ASSEMBLY IMG</span></div>
-                <div class="views8">
-                  ${sample.reference_views.map(src => `<div class="viewcell"><img src="${src}" alt=""></div>`).join('')}
+                <div class="composite-view">
+                  <img src="reference_views/${sample.case_key}_composite.png" alt="Composite reference views for ${sample.case_key}">
                 </div>
               </div>
               <div class="libarea">
