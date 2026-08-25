@@ -1417,37 +1417,50 @@
               }
               .libarea{
                 border-top-width:1px!important;
-                padding:5px 7px 6px!important;
+                padding:7px 8px 0!important;
                 min-height:0!important;
-                overflow:visible!important;
+                overflow:hidden!important;
+                display:flex!important;
+                flex-direction:column!important;
               }
               .libtitle{
+                flex:0 0 auto!important;
                 font-size:14px!important;
-                margin:0 0 4px!important;
+                margin:0 0 6px!important;
+                padding-bottom:0!important;
               }
 
-              /* Keep the original horizontal library strip and leave
-                 enough room for the scrollbar itself to be fully visible. */
+              /* Library Parts fills the entire lower-left region.
+                 The horizontal scrollbar therefore sits on the true bottom edge. */
               .libstrip{
-                height:99px!important;
-                gap:7px!important;
-                padding:1px 2px 12px!important;
+                flex:1 1 auto!important;
+                min-height:0!important;
+                height:auto!important;
+                gap:12px!important;
+                padding:2px 3px 0!important;
+                margin:0!important;
+                align-items:stretch!important;
                 overflow-x:auto!important;
                 overflow-y:hidden!important;
                 scrollbar-gutter:stable!important;
                 scrollbar-width:auto!important;
               }
-              .libstrip::-webkit-scrollbar{height:10px!important;}
-              .libstrip::-webkit-scrollbar-track{background:#edf4f5!important;}
+              .libstrip::-webkit-scrollbar{height:11px!important;}
+              .libstrip::-webkit-scrollbar-track{
+                background:#edf4f5!important;
+                border-top:1px solid rgba(157,203,210,.55)!important;
+              }
               .libstrip::-webkit-scrollbar-thumb{
-                background:#9fc9d0!important;
-                border-radius:8px!important;
+                background:#8fbdc5!important;
+                border-radius:999px!important;
                 border:2px solid #edf4f5!important;
               }
               .libpart{
-                flex:0 0 94px!important;
-                height:89px!important;
-                min-height:0!important;
+                flex:0 0 132px!important;
+                width:132px!important;
+                height:auto!important;
+                min-height:118px!important;
+                align-self:stretch!important;
                 position:relative!important;
                 overflow:hidden!important;
                 border:1px solid #9dcbd2!important;
