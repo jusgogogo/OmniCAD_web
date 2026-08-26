@@ -871,7 +871,7 @@
         <div class="qualitative-3d-wrap">
           <iframe
             id="qualitative3dFrame"
-            src="./public/media/qualitative_3d/index.html?v=4"
+            src="./public/media/qualitative_3d/index.html?v=reset-matte-final-v4"
             title="OmniCAD interactive qualitative assembly examples"
             loading="eager"
             scrolling="no"
@@ -1195,7 +1195,39 @@
           }
         }
 
-        /* Pass 3: feather the cutout boundary instead of leaving a hard binary
+        /* Pass 3: composite-reference-only global matte.
+           The five composite figures contain separate white/off-white view cards,
+           so some interior gaps are not connected to the outer canvas. For these
+           images only, remove neutral bright pixels everywhere with a continuous
+           alpha ramp. This removes internal white gaps without applying the same
+           aggressive matte to benchmark/statistics rasters. */
+        const isCompositeReference = !!img.closest?.('.composite-view');
+
+        if (isCompositeReference) {
+          for (let index = 0; index < count; index++) {
+            const p = index * 4;
+            if (data[p + 3] < 8) continue;
+
+            const r = data[p], g = data[p + 1], b = data[p + 2];
+            const hi = Math.max(r, g, b);
+            const lo = Math.min(r, g, b);
+            const chroma = hi - lo;
+
+            /* Neutral white / pale-gray matte. Saturated CAD colors survive.
+               244+ is fully transparent; 214..244 receives smooth alpha. */
+            if (lo >= 214 && chroma <= 38) {
+              if (lo >= 244) {
+                data[p + 3] = 0;
+              } else {
+                const keep = Math.max(0, Math.min(1, (244 - lo) / 30));
+                const softened = Math.round(data[p + 3] * keep * keep);
+                data[p + 3] = Math.min(data[p + 3], softened);
+              }
+            }
+          }
+        }
+
+        /* Pass 4: feather the cutout boundary instead of leaving a hard binary
            mask. Only neutral bright pixels immediately touching transparency are
            softened, so dark outlines and colored CAD parts stay crisp. */
         const alphaBeforeFeather = new Uint8Array(count);
@@ -1216,7 +1248,8 @@
         }
 
         let alphaMap = alphaBeforeFeather;
-        for (let ring = 0; ring < 2; ring++) {
+        const featherRings = isCompositeReference ? 3 : 2;
+        for (let ring = 0; ring < featherRings; ring++) {
           const nextAlpha = new Uint8Array(alphaMap);
           for (let index = 0; index < count; index++) {
             const p = index * 4;
@@ -1228,9 +1261,12 @@
             const chroma = hi - lo;
 
             /* Anti-aliased white halo: neutral and bright only. */
-            if (lo >= 208 && chroma <= 30) {
-              const opacityFromTone = Math.max(0, Math.min(1, (246 - lo) / 38));
-              const ringFactor = ring === 0 ? 0.58 : 0.82;
+            const featherMin = isCompositeReference ? 196 : 208;
+            const featherChroma = isCompositeReference ? 42 : 30;
+            if (lo >= featherMin && chroma <= featherChroma) {
+              const opacityFromTone = Math.max(0, Math.min(1, (246 - lo) / (246 - featherMin)));
+              const ringFactors = isCompositeReference ? [0.42, 0.66, 0.86] : [0.58, 0.82];
+              const ringFactor = ringFactors[Math.min(ring, ringFactors.length - 1)];
               const target = Math.round(255 * opacityFromTone * ringFactor);
               nextAlpha[index] = Math.min(alphaMap[index], target);
             }
@@ -1659,12 +1695,42 @@
         root.style.scrollBehavior = previousBehavior;
       }
 
+      function resetEmbeddedResultSizing() {
+        try {
+          const win = frame.contentWindow;
+          const doc = frame.contentDocument || win?.document;
+          if (!doc) return;
+
+          if (typeof win?.__omnicadClearLegacyResultSizing === 'function') {
+            win.__omnicadClearLegacyResultSizing();
+            return;
+          }
+
+          /* Fallback for a cached child page: clear the legacy inline heights
+             directly so Ctrl+0 can always return to intrinsic CSS geometry. */
+          doc.querySelectorAll('.results').forEach((el) => el.style.removeProperty('height'));
+          doc.querySelectorAll('.result').forEach((el) => {
+            el.style.removeProperty('height');
+            el.style.removeProperty('min-height');
+          });
+          doc.querySelectorAll('.result .viewer, .result .failed').forEach((el) => {
+            el.style.removeProperty('height');
+            el.style.removeProperty('min-height');
+          });
+        } catch (e) {
+          /* Same-origin iframe normally remains accessible. */
+        }
+      }
+
       function syncQualitativeHeight(scrollSnapshot) {
         try {
           const doc = frame.contentDocument || frame.contentWindow.document;
           if (!doc) return;
 
           const snapshot = scrollSnapshot || { x: window.scrollX, y: window.scrollY };
+
+          resetEmbeddedResultSizing();
+
           const activeCase = doc.querySelector('.case.active');
           const caseBar = doc.querySelector('.casebar');
           const casesRoot = doc.getElementById('cases');
@@ -1745,6 +1811,10 @@
       let resizeSnapshot = null;
 
       function handleOuterResize() {
+        /* Browser zoom/reset must never inherit inline card heights from the
+           previous zoom level. Clear them immediately before the new layout. */
+        resetEmbeddedResultSizing();
+
         /* Browser zoom fires several resize events. Capture the position only
            once at the start of the burst, then debounce the iframe resync. */
         if (!resizeSnapshot) {
