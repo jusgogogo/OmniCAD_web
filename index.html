@@ -865,7 +865,7 @@
         <div class="qualitative-3d-wrap">
           <iframe
             id="qualitative3dFrame"
-            src="./public/media/qualitative_3d/index.html"
+            src="./public/media/qualitative_3d/index.html?v=dark-reference-composite-v2"
             title="OmniCAD interactive qualitative assembly examples"
             loading="eager"
             scrolling="no"
@@ -1291,6 +1291,8 @@
               html.omnicad-host-dark .casebar,
               html.omnicad-host-dark .layout,
               html.omnicad-host-dark .views8,
+              html.omnicad-host-dark .viewsarea,
+              html.omnicad-host-dark .composite-view,
               html.omnicad-host-dark .viewcell,
               html.omnicad-host-dark .libarea,
               html.omnicad-host-dark .libpart,
@@ -1304,7 +1306,8 @@
               html.omnicad-host-dark .libpart{
                 box-shadow:inset 0 0 0 1px rgba(62,232,255,.08)!important;
               }
-              html.omnicad-host-dark .viewcell img{
+              html.omnicad-host-dark .viewcell img,
+              html.omnicad-host-dark .composite-view img{
                 background:transparent!important;
               }
               html.omnicad-host-dark .casebar .label,
@@ -1561,7 +1564,9 @@
         try {
           const doc = frame.contentDocument || frame.contentWindow.document;
           if (!doc) return;
-          const activeImages = doc.querySelectorAll('.case.active .viewcell img');
+          const activeImages = doc.querySelectorAll(
+            '.case.active .composite-view img, .case.active .viewcell img'
+          );
           activeImages.forEach(img => window.__omnicadApplyDarkRaster?.(img));
         } catch (e) {
           /* Same-origin GitHub Pages iframe normally remains accessible. */
