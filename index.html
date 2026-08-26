@@ -871,7 +871,7 @@
         <div class="qualitative-3d-wrap">
           <iframe
             id="qualitative3dFrame"
-            src="./public/media/qualitative_3d/index.html?v=dark-reference-composite-v2"
+            src="./public/media/qualitative_3d/index.html?v=zoom-growth-dark-edge-v3"
             title="OmniCAD interactive qualitative assembly examples"
             loading="eager"
             scrolling="no"
@@ -1092,7 +1092,7 @@
         const r = data[p], g = data[p + 1], b = data[p + 2];
         const hi = Math.max(r, g, b);
         const lo = Math.min(r, g, b);
-        return lo >= 238 && (hi - lo) <= 18;
+        return lo >= 232 && (hi - lo) <= 24;
       }
 
       function createTransparentEdgeBackground(img) {
@@ -1145,12 +1145,12 @@
           if (y + 1 < h) enqueue(index + w);
         }
 
-        /* Pass 2: cases 04/05 contain sparse structures that can enclose islands
-           of the original white canvas. Remove only LARGE, very-near-white
-           interior components; small light-colored CAD details are preserved. */
+        /* Pass 2: composite reference figures can contain enclosed white panels
+           and thin residual white islands. Remove only sizeable, neutral bright
+           components so light-colored CAD geometry is not erased. */
         const interiorSeen = new Uint8Array(count);
         const component = new Int32Array(count);
-        const minInteriorArea = Math.max(700, Math.floor(count * 0.0008));
+        const minInteriorArea = Math.max(420, Math.floor(count * 0.00042));
 
         function isInteriorBackground(index) {
           const p = index * 4;
@@ -1158,7 +1158,7 @@
           const r = data[p], g = data[p + 1], b = data[p + 2];
           const hi = Math.max(r, g, b);
           const lo = Math.min(r, g, b);
-          return lo >= 244 && (hi - lo) <= 12;
+          return lo >= 236 && (hi - lo) <= 20;
         }
 
         for (let start = 0; start < count; start++) {
@@ -1193,6 +1193,50 @@
               data[component[i] * 4 + 3] = 0;
             }
           }
+        }
+
+        /* Pass 3: feather the cutout boundary instead of leaving a hard binary
+           mask. Only neutral bright pixels immediately touching transparency are
+           softened, so dark outlines and colored CAD parts stay crisp. */
+        const alphaBeforeFeather = new Uint8Array(count);
+        for (let i = 0; i < count; i++) alphaBeforeFeather[i] = data[i * 4 + 3];
+
+        function hasTransparentNeighbor(index, alphaMap) {
+          const x = index % w;
+          const y = (index / w) | 0;
+          for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+              if (dx === 0 && dy === 0) continue;
+              const nx = x + dx, ny = y + dy;
+              if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+              if (alphaMap[ny * w + nx] < 24) return true;
+            }
+          }
+          return false;
+        }
+
+        let alphaMap = alphaBeforeFeather;
+        for (let ring = 0; ring < 2; ring++) {
+          const nextAlpha = new Uint8Array(alphaMap);
+          for (let index = 0; index < count; index++) {
+            const p = index * 4;
+            if (alphaMap[index] < 24 || !hasTransparentNeighbor(index, alphaMap)) continue;
+
+            const r = data[p], g = data[p + 1], b = data[p + 2];
+            const hi = Math.max(r, g, b);
+            const lo = Math.min(r, g, b);
+            const chroma = hi - lo;
+
+            /* Anti-aliased white halo: neutral and bright only. */
+            if (lo >= 208 && chroma <= 30) {
+              const opacityFromTone = Math.max(0, Math.min(1, (246 - lo) / 38));
+              const ringFactor = ring === 0 ? 0.58 : 0.82;
+              const target = Math.round(255 * opacityFromTone * ringFactor);
+              nextAlpha[index] = Math.min(alphaMap[index], target);
+            }
+          }
+          for (let i = 0; i < count; i++) data[i * 4 + 3] = nextAlpha[i];
+          alphaMap = nextAlpha;
         }
 
         ctx.putImageData(imageData, 0, 0);
@@ -1487,11 +1531,9 @@
                 grid-template-rows:repeat(2,minmax(0,1fr))!important;
                 align-content:stretch!important;
                 align-self:stretch!important;
-                height:100%!important;
               }
               .result{
                 min-height:0!important;
-                height:auto!important;
                 aspect-ratio:auto!important;
                 border-right-width:1px!important;
                 border-bottom-width:1px!important;
@@ -1623,11 +1665,21 @@
           if (!doc) return;
 
           const snapshot = scrollSnapshot || { x: window.scrollX, y: window.scrollY };
-          const h = Math.max(
-            doc.documentElement ? doc.documentElement.scrollHeight : 0,
-            doc.body ? doc.body.scrollHeight : 0,
-            530
+          const activeCase = doc.querySelector('.case.active');
+          const caseBar = doc.querySelector('.casebar');
+          const casesRoot = doc.getElementById('cases');
+
+          const contentBottom = Math.max(
+            activeCase ? activeCase.getBoundingClientRect().bottom : 0,
+            caseBar ? caseBar.getBoundingClientRect().bottom : 0,
+            casesRoot ? casesRoot.getBoundingClientRect().bottom : 0
           );
+
+          /* IMPORTANT: do not use html/body scrollHeight here.
+             scrollHeight includes the iframe viewport itself; after Ctrl+/Ctrl-
+             browser rounding can make it a few pixels larger than the current
+             iframe, which causes an endless height -> scrollHeight -> height loop. */
+          const h = Math.max(Math.ceil(contentBottom + 2), 530);
 
           /* Prevent the browser's own scroll anchoring from fighting the
              explicit viewport preservation while iframe height changes. */
@@ -1672,12 +1724,15 @@
 
         const snapshot = scrollSnapshot || { x: window.scrollX, y: window.scrollY };
 
-        requestAnimationFrame(() => syncQualitativeHeight(snapshot));
+        if (!resizeOnly) {
+          requestAnimationFrame(() => syncQualitativeHeight(snapshot));
+        }
 
         if (resizeOnly) {
-          /* One late pass is enough for responsive child-layout changes.
-             Reuse the SAME snapshot so scroll position cannot drift. */
-          setTimeout(() => syncQualitativeHeight(snapshot), 160);
+          /* Browser zoom fires a burst of resize events. The child page has its
+             own resize handler; wait for it to settle, then measure real content
+             exactly once. No repeated outer-height writes. */
+          setTimeout(() => syncQualitativeHeight(snapshot), 180);
         } else {
           /* Initial iframe load can include asynchronous model/layout work. */
           setTimeout(() => syncQualitativeHeight(snapshot), 120);
