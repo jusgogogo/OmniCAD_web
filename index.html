@@ -515,11 +515,11 @@
      The benchmark overview is exempted below because it must keep the paper's authored colors. */
 
   /* Qualitative Placement Examples embeds the existing interactive 3D site; surrounding layout stays OmniLayout. */
-  .qualitative-3d-wrap{margin:0;width:100%;height:760px;min-height:0;border:0;background:transparent;overflow:hidden;overflow-anchor:none;}
-  .qualitative-3d-wrap iframe{display:block;width:100%;height:100%;border:0;background:transparent;overflow:hidden;}
+  .qualitative-3d-wrap{margin:0;width:100%;height:auto;min-height:530px;border:0;background:transparent;overflow:hidden;overflow-anchor:none;}
+  .qualitative-3d-wrap iframe{display:block;width:100%;height:530px;border:0;background:transparent;overflow:hidden;}
   body.bright .qualitative-3d-wrap{border:0;background:transparent;}
-  @media(max-width:720px){.qualitative-3d-wrap{height:2350px}}
-  @media(max-width:560px){.qualitative-3d-wrap{height:4300px}}
+  @media(max-width:900px){.qualitative-3d-wrap{min-height:2350px}.qualitative-3d-wrap iframe{height:2350px}}
+  @media(max-width:560px){.qualitative-3d-wrap{min-height:4300px}.qualitative-3d-wrap iframe{height:4300px}}
 
   /* OmniCAD has four dataset-statistics figures; keep OmniLayout mosaic sizing. */
   .metrics-row.four{grid-template-columns:repeat(4,1fr);}
@@ -871,7 +871,7 @@
         <div class="qualitative-3d-wrap">
           <iframe
             id="qualitative3dFrame"
-            src="./public/media/qualitative_3d/index.html?v=stable-iframe-matte-v5"
+            src="./public/media/qualitative_3d/index.html?v=safe-zoom-matte-v6"
             title="OmniCAD interactive qualitative assembly examples"
             loading="eager"
             scrolling="no"
@@ -1195,42 +1195,15 @@
           }
         }
 
-        /* Pass 3: composite-reference-only adaptive background matte.
-           Estimate the canvas/background color from the outer border, then remove
-           pixels close to that color ANYWHERE in the image. This also catches the
-           enclosed white gaps between the eight view cards. */
+        /* Pass 3: composite-reference-only global matte.
+           The five composite figures contain separate white/off-white view cards,
+           so some interior gaps are not connected to the outer canvas. For these
+           images only, remove neutral bright pixels everywhere with a continuous
+           alpha ramp. This removes internal white gaps without applying the same
+           aggressive matte to benchmark/statistics rasters. */
         const isCompositeReference = !!img.closest?.('.composite-view');
 
         if (isCompositeReference) {
-          const borderSamples = [];
-          const sampleStep = Math.max(1, Math.floor(Math.min(w, h) / 180));
-
-          function collectSample(index) {
-            const p = index * 4;
-            const r = data[p], g = data[p + 1], b = data[p + 2], a = data[p + 3];
-            const hi = Math.max(r, g, b);
-            const lo = Math.min(r, g, b);
-            if (a > 32 && hi >= 185 && (hi - lo) <= 72) {
-              borderSamples.push([r, g, b]);
-            }
-          }
-
-          for (let x = 0; x < w; x += sampleStep) {
-            collectSample(x);
-            collectSample((h - 1) * w + x);
-          }
-          for (let y = 0; y < h; y += sampleStep) {
-            collectSample(y * w);
-            collectSample(y * w + (w - 1));
-          }
-
-          let bgR = 250, bgG = 250, bgB = 250;
-          if (borderSamples.length) {
-            borderSamples.sort((a, b) => (a[0] + a[1] + a[2]) - (b[0] + b[1] + b[2]));
-            const mid = borderSamples[(borderSamples.length / 2) | 0];
-            bgR = mid[0]; bgG = mid[1]; bgB = mid[2];
-          }
-
           for (let index = 0; index < count; index++) {
             const p = index * 4;
             if (data[p + 3] < 8) continue;
@@ -1240,31 +1213,20 @@
             const lo = Math.min(r, g, b);
             const chroma = hi - lo;
             const brightness = (r + g + b) / 3;
-            const dr = r - bgR, dg = g - bgG, db = b - bgB;
-            const bgDistance = Math.sqrt(dr * dr + dg * dg + db * db);
 
-            /* Exact/near-exact background color: fully transparent everywhere. */
-            if (bgDistance <= 34 && brightness >= 178) {
+            /* Composite images use white/off-white canvases around every view.
+               Remove those neutral bright pixels globally, including enclosed
+               gaps between views. Saturated CAD colors are protected by chroma. */
+            if (brightness >= 238 && chroma <= 46) {
               data[p + 3] = 0;
               continue;
             }
 
-            /* White/off-white card interiors and soft shadows:
-               fade smoothly as they approach the sampled background. */
-            if (bgDistance < 92 && brightness >= 190 && chroma <= 62) {
-              const t = Math.max(0, Math.min(1, (bgDistance - 34) / 58));
-              const keep = t * t;
-              data[p + 3] = Math.min(data[p + 3], Math.round(255 * keep));
-              continue;
-            }
-
-            /* Catch remaining neutral whites even if a card uses a slightly
-               different white from the outer canvas. */
-            if (brightness >= 244 && chroma <= 40) {
-              data[p + 3] = 0;
-            } else if (brightness >= 218 && chroma <= 48) {
-              const keep = Math.max(0, Math.min(1, (244 - brightness) / 26));
-              data[p + 3] = Math.min(data[p + 3], Math.round(255 * keep * keep));
+            /* Smoothly fade neutral pale-gray/white antialias and soft shadows. */
+            if (brightness >= 202 && chroma <= 34) {
+              const keep = Math.max(0, Math.min(1, (238 - brightness) / 36));
+              const softened = Math.round(data[p + 3] * keep * keep);
+              data[p + 3] = Math.min(data[p + 3], softened);
             }
           }
         }
@@ -1304,10 +1266,10 @@
 
             /* Anti-aliased white halo: neutral and bright only. */
             const featherMin = isCompositeReference ? 184 : 208;
-            const featherChroma = isCompositeReference ? 56 : 30;
+            const featherChroma = isCompositeReference ? 58 : 30;
             if (lo >= featherMin && chroma <= featherChroma) {
               const opacityFromTone = Math.max(0, Math.min(1, (246 - lo) / (246 - featherMin)));
-              const ringFactors = isCompositeReference ? [0.30, 0.50, 0.70, 0.88] : [0.58, 0.82];
+              const ringFactors = isCompositeReference ? [0.28, 0.48, 0.68, 0.86] : [0.58, 0.82];
               const ringFactor = ringFactors[Math.min(ring, ringFactors.length - 1)];
               const target = Math.round(255 * opacityFromTone * ringFactor);
               nextAlpha[index] = Math.min(alphaMap[index], target);
@@ -1397,36 +1359,16 @@
             style.id = 'omnicad-embed-overrides';
             style.textContent = `
               html,body{
-                width:100%!important;
-                height:100%!important;
                 margin:0!important;
                 overflow:hidden!important;
                 background:transparent!important;
               }
               .wrap{
                 width:100%!important;
-                height:100vh!important;
                 max-width:none!important;
                 margin:0!important;
                 padding:0!important;
                 background:transparent!important;
-                display:flex!important;
-                flex-direction:column!important;
-                min-height:0!important;
-              }
-              #cases{
-                flex:1 1 auto!important;
-                min-height:0!important;
-                height:auto!important;
-                overflow:hidden!important;
-              }
-              .case{
-                height:100%!important;
-                min-height:0!important;
-              }
-              .case.active{
-                display:block!important;
-                height:100%!important;
               }
 
               /* Follow the outer OmniCAD theme. The standalone viewer is authored
@@ -1528,12 +1470,9 @@
               */
               .layout{
                 width:100%!important;
-                height:100%!important;
                 min-height:0!important;
-                grid-template-columns:42.5% 57.5%!important;
                 border-width:1px!important;
                 align-items:stretch!important;
-                overflow:hidden!important;
               }
               .left{
                 border-right-width:1px!important;
@@ -1629,12 +1568,9 @@
               }
 
               .results{
-                grid-template-columns:repeat(4,minmax(0,1fr))!important;
                 grid-template-rows:repeat(2,minmax(0,1fr))!important;
                 align-content:stretch!important;
                 align-self:stretch!important;
-                height:100%!important;
-                min-height:0!important;
               }
               .result{
                 min-height:0!important;
@@ -1675,7 +1611,7 @@
                 image-rendering:auto!important;
               }
 
-              @media(max-width:720px){
+              @media(max-width:680px){
                 .casebar{width:100%!important;}
                 .layout{grid-template-columns:1fr!important;}
                 .left{
@@ -1754,14 +1690,154 @@
         }
       }
 
-      function refreshEmbeddedViewer() {
+      function restoreOuterScrollInstantly(snapshot) {
+        if (!snapshot) return;
+        const root = document.documentElement;
+        const previousBehavior = root.style.scrollBehavior;
+        root.style.scrollBehavior = 'auto';
+        window.scrollTo(snapshot.x, snapshot.y);
+        root.style.scrollBehavior = previousBehavior;
+      }
+
+      function resetEmbeddedResultSizing() {
+        try {
+          const win = frame.contentWindow;
+          const doc = frame.contentDocument || win?.document;
+          if (!doc) return;
+
+          if (typeof win?.__omnicadClearLegacyResultSizing === 'function') {
+            win.__omnicadClearLegacyResultSizing();
+            return;
+          }
+
+          /* Fallback for a cached child page: clear the legacy inline heights
+             directly so Ctrl+0 can always return to intrinsic CSS geometry. */
+          doc.querySelectorAll('.results').forEach((el) => el.style.removeProperty('height'));
+          doc.querySelectorAll('.result').forEach((el) => {
+            el.style.removeProperty('height');
+            el.style.removeProperty('min-height');
+          });
+          doc.querySelectorAll('.result .viewer, .result .failed').forEach((el) => {
+            el.style.removeProperty('height');
+            el.style.removeProperty('min-height');
+          });
+        } catch (e) {
+          /* Same-origin iframe normally remains accessible. */
+        }
+      }
+
+      function syncQualitativeHeight(scrollSnapshot) {
+        try {
+          const doc = frame.contentDocument || frame.contentWindow.document;
+          if (!doc) return;
+
+          const snapshot = scrollSnapshot || { x: window.scrollX, y: window.scrollY };
+
+          resetEmbeddedResultSizing();
+
+          const activeCase = doc.querySelector('.case.active');
+          const caseBar = doc.querySelector('.casebar');
+          const casesRoot = doc.getElementById('cases');
+
+          const contentBottom = Math.max(
+            activeCase ? activeCase.getBoundingClientRect().bottom : 0,
+            caseBar ? caseBar.getBoundingClientRect().bottom : 0,
+            casesRoot ? casesRoot.getBoundingClientRect().bottom : 0
+          );
+
+          /* IMPORTANT: do not use html/body scrollHeight here.
+             scrollHeight includes the iframe viewport itself; after Ctrl+/Ctrl-
+             browser rounding can make it a few pixels larger than the current
+             iframe, which causes an endless height -> scrollHeight -> height loop. */
+          const h = Math.max(Math.ceil(contentBottom + 2), 530);
+
+          /* Prevent the browser's own scroll anchoring from fighting the
+             explicit viewport preservation while iframe height changes. */
+          const root = document.documentElement;
+          const body = document.body;
+          const previousRootAnchor = root.style.overflowAnchor;
+          const previousBodyAnchor = body.style.overflowAnchor;
+          root.style.overflowAnchor = 'none';
+          body.style.overflowAnchor = 'none';
+
+          const currentFrameHeight = parseFloat(frame.style.height) || frame.getBoundingClientRect().height || 0;
+          if (Math.abs(currentFrameHeight - h) > 1) {
+            frame.style.height = h + 'px';
+          }
+          if (wrap) {
+            const currentWrapHeight = parseFloat(wrap.style.height) || wrap.getBoundingClientRect().height || 0;
+            if (Math.abs(currentWrapHeight - h) > 1) {
+              wrap.style.height = h + 'px';
+              wrap.style.minHeight = h + 'px';
+            }
+          }
+
+          /* html uses smooth scrolling for navigation, so viewport restoration
+             must explicitly be instant or zoom/resize looks like auto-scrolling. */
+          requestAnimationFrame(() => {
+            restoreOuterScrollInstantly(snapshot);
+            requestAnimationFrame(() => {
+              root.style.overflowAnchor = previousRootAnchor;
+              body.style.overflowAnchor = previousBodyAnchor;
+            });
+          });
+        } catch (e) {
+          /* CSS fallback dimensions remain active. */
+        }
+      }
+
+      function refreshEmbeddedViewer(scrollSnapshot, resizeOnly = false) {
         installViewerOverrides();
         installEmbeddedRasterObserver();
         syncEmbeddedTheme();
         syncEmbeddedRasterBackgrounds();
+
+        const snapshot = scrollSnapshot || { x: window.scrollX, y: window.scrollY };
+
+        if (!resizeOnly) {
+          requestAnimationFrame(() => syncQualitativeHeight(snapshot));
+        }
+
+        if (resizeOnly) {
+          /* Browser zoom fires a burst of resize events. The child page has its
+             own resize handler; wait for it to settle, then measure real content
+             exactly once. No repeated outer-height writes. */
+          setTimeout(() => syncQualitativeHeight(snapshot), 180);
+        } else {
+          /* Initial iframe load can include asynchronous model/layout work. */
+          setTimeout(() => syncQualitativeHeight(snapshot), 120);
+          setTimeout(() => syncQualitativeHeight(snapshot), 500);
+          setTimeout(() => syncQualitativeHeight(snapshot), 1200);
+        }
       }
 
-      frame.addEventListener('load', refreshEmbeddedViewer);
+      let resizeTimer = 0;
+      let resizeSnapshot = null;
+
+      function handleOuterResize() {
+        /* Browser zoom/reset must never inherit inline card heights from the
+           previous zoom level. Clear them immediately before the new layout. */
+        resetEmbeddedResultSizing();
+
+        /* Browser zoom fires several resize events. Capture the position only
+           once at the start of the burst, then debounce the iframe resync. */
+        if (!resizeSnapshot) {
+          resizeSnapshot = { x: window.scrollX, y: window.scrollY };
+        }
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const snapshot = resizeSnapshot;
+          resizeSnapshot = null;
+          refreshEmbeddedViewer(snapshot, true);
+        }, 90);
+      }
+
+      frame.addEventListener('load', () => {
+        refreshEmbeddedViewer({ x: window.scrollX, y: window.scrollY }, false);
+      });
+      /* Do not recompute iframe height on browser zoom/resize.
+         Ctrl+/Ctrl-/Ctrl+0 should only change browser scale, not Qualitative
+         document geometry. The iframe is sized during its initial load only. */
       window.addEventListener('omnicad-themechange', syncEmbeddedTheme);
     })();
   </script>
