@@ -49,6 +49,8 @@
     .viewer { width: 100%; height: 100%; min-height: inherit; background: white; cursor: grab; }
     .viewer canvas { width: 100%; height: 100%; display: block; }
     .failed { height: 100%; min-height: inherit; display: flex; align-items: center; justify-content: center; text-align: center; font-size: clamp(20px, 1.65vw, 30px); letter-spacing: 3px; font-weight: 900; line-height: 1.25; }
+    .failed.no-output { flex-direction: column; gap: 9px; }
+    .failed-note { font-size: 9px; line-height: 1.35; letter-spacing: 1.15px; font-weight: 900; color: #6b8790; white-space: nowrap; }
     .case { display: none; }
     .case.active { display: block; }
     @media (max-width: 1100px) {
@@ -109,7 +111,7 @@
                 const partCount = sample.part_counts?.[key];
                 const countBadge = partCount == null ? '' : `<span class="partcount">${partCount} PARTS</span>`;
                 const modelBadge = `<div class="model-badge"><span class="tag">${label}</span>${countBadge}</div>`;
-                if (!glb) return `<article class="result">${modelBadge}<div class="failed">NO OUTPUT</div></article>`;
+                if (!glb) return `<article class="result">${modelBadge}<div class="failed no-output"><span>NO OUTPUT</span><span class="failed-note">OUT OF TOKEN WINDOW</span></div></article>`;
                 return `<article class="result">${modelBadge}<div class="viewer" data-src="${glb}?v=qual-layout-hidpi-v1"></div></article>`;
               }).join('')}
             </section>
@@ -249,7 +251,7 @@
         });
         scene.add(model);
         resize();
-        fitCamera(camera, controls, model, el.classList.contains('libpart') ? 1.50 : 1.40);
+        fitCamera(camera, controls, model, el.classList.contains('libpart') ? 1.00 : 1.40);
       }, undefined, () => {
         el.innerHTML = '<div class="failed">LOAD<br>FAILED</div>';
       });
