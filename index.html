@@ -802,6 +802,13 @@
 </style>
 
 
+<style id="omnicad-no-scroll-anchoring">
+  html, body, #showcase, .qualitative-3d-wrap {
+    overflow-anchor: none !important;
+  }
+</style>
+
+
 <style id="omnicad-dark-raster-background-fix">
   /* In dark mode the processed PNG background becomes transparent,
      so the existing dark panel shows through. Bright mode keeps original PNGs. */
@@ -812,17 +819,21 @@
 
 
 <script id="omnicad-refresh-scroll-control">
-  /* Reload should start predictably instead of restoring a stale deep-page position. */
+  /* Normal opens/reloads stay at the top. Explicit hash links still work. */
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  window.addEventListener('pageshow', () => {
-    if (!location.hash) {
-      const root = document.documentElement;
-      const previous = root.style.scrollBehavior;
-      root.style.scrollBehavior = 'auto';
-      window.scrollTo(0, 0);
-      root.style.scrollBehavior = previous;
-    }
-  });
+
+  function omnicadScrollTopInstant() {
+    if (location.hash) return;
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
+    root.style.scrollBehavior = previous;
+  }
+
+  omnicadScrollTopInstant();
+  window.addEventListener('pageshow', omnicadScrollTopInstant);
+  window.addEventListener('load', () => requestAnimationFrame(omnicadScrollTopInstant), { once: true });
 </script>
 
 </head>
@@ -1690,50 +1701,10 @@
         }
       }
 
-      function restoreOuterScrollInstantly(snapshot) {
-        if (!snapshot) return;
-        const root = document.documentElement;
-        const previousBehavior = root.style.scrollBehavior;
-        root.style.scrollBehavior = 'auto';
-        window.scrollTo(snapshot.x, snapshot.y);
-        root.style.scrollBehavior = previousBehavior;
-      }
-
-      function resetEmbeddedResultSizing() {
-        try {
-          const win = frame.contentWindow;
-          const doc = frame.contentDocument || win?.document;
-          if (!doc) return;
-
-          if (typeof win?.__omnicadClearLegacyResultSizing === 'function') {
-            win.__omnicadClearLegacyResultSizing();
-            return;
-          }
-
-          /* Fallback for a cached child page: clear the legacy inline heights
-             directly so Ctrl+0 can always return to intrinsic CSS geometry. */
-          doc.querySelectorAll('.results').forEach((el) => el.style.removeProperty('height'));
-          doc.querySelectorAll('.result').forEach((el) => {
-            el.style.removeProperty('height');
-            el.style.removeProperty('min-height');
-          });
-          doc.querySelectorAll('.result .viewer, .result .failed').forEach((el) => {
-            el.style.removeProperty('height');
-            el.style.removeProperty('min-height');
-          });
-        } catch (e) {
-          /* Same-origin iframe normally remains accessible. */
-        }
-      }
-
-      function syncQualitativeHeight(scrollSnapshot) {
+      function syncQualitativeHeightOnce() {
         try {
           const doc = frame.contentDocument || frame.contentWindow.document;
           if (!doc) return;
-
-          const snapshot = scrollSnapshot || { x: window.scrollX, y: window.scrollY };
-
-          resetEmbeddedResultSizing();
 
           const activeCase = doc.querySelector('.case.active');
           const caseBar = doc.querySelector('.casebar');
@@ -1745,99 +1716,33 @@
             casesRoot ? casesRoot.getBoundingClientRect().bottom : 0
           );
 
-          /* IMPORTANT: do not use html/body scrollHeight here.
-             scrollHeight includes the iframe viewport itself; after Ctrl+/Ctrl-
-             browser rounding can make it a few pixels larger than the current
-             iframe, which causes an endless height -> scrollHeight -> height loop. */
           const h = Math.max(Math.ceil(contentBottom + 2), 530);
 
-          /* Prevent the browser's own scroll anchoring from fighting the
-             explicit viewport preservation while iframe height changes. */
-          const root = document.documentElement;
-          const body = document.body;
-          const previousRootAnchor = root.style.overflowAnchor;
-          const previousBodyAnchor = body.style.overflowAnchor;
-          root.style.overflowAnchor = 'none';
-          body.style.overflowAnchor = 'none';
-
-          const currentFrameHeight = parseFloat(frame.style.height) || frame.getBoundingClientRect().height || 0;
-          if (Math.abs(currentFrameHeight - h) > 1) {
-            frame.style.height = h + 'px';
-          }
+          frame.style.height = h + 'px';
           if (wrap) {
-            const currentWrapHeight = parseFloat(wrap.style.height) || wrap.getBoundingClientRect().height || 0;
-            if (Math.abs(currentWrapHeight - h) > 1) {
-              wrap.style.height = h + 'px';
-              wrap.style.minHeight = h + 'px';
-            }
+            wrap.style.height = h + 'px';
+            wrap.style.minHeight = h + 'px';
           }
-
-          /* html uses smooth scrolling for navigation, so viewport restoration
-             must explicitly be instant or zoom/resize looks like auto-scrolling. */
-          requestAnimationFrame(() => {
-            restoreOuterScrollInstantly(snapshot);
-            requestAnimationFrame(() => {
-              root.style.overflowAnchor = previousRootAnchor;
-              body.style.overflowAnchor = previousBodyAnchor;
-            });
-          });
         } catch (e) {
-          /* CSS fallback dimensions remain active. */
+          /* Keep CSS fallback dimensions if same-origin measurement is unavailable. */
         }
       }
 
-      function refreshEmbeddedViewer(scrollSnapshot, resizeOnly = false) {
+      function refreshEmbeddedViewer() {
         installViewerOverrides();
         installEmbeddedRasterObserver();
         syncEmbeddedTheme();
         syncEmbeddedRasterBackgrounds();
 
-        const snapshot = scrollSnapshot || { x: window.scrollX, y: window.scrollY };
-
-        if (!resizeOnly) {
-          requestAnimationFrame(() => syncQualitativeHeight(snapshot));
-        }
-
-        if (resizeOnly) {
-          /* Browser zoom fires a burst of resize events. The child page has its
-             own resize handler; wait for it to settle, then measure real content
-             exactly once. No repeated outer-height writes. */
-          setTimeout(() => syncQualitativeHeight(snapshot), 180);
-        } else {
-          /* Initial iframe load can include asynchronous model/layout work. */
-          setTimeout(() => syncQualitativeHeight(snapshot), 120);
-          setTimeout(() => syncQualitativeHeight(snapshot), 500);
-          setTimeout(() => syncQualitativeHeight(snapshot), 1200);
-        }
+        /* One measurement only. The child layout is already synchronous;
+           repeated 120/500/1200 ms measurements caused the browser to anchor
+           the page downward on initial open. */
+        requestAnimationFrame(() => {
+          requestAnimationFrame(syncQualitativeHeightOnce);
+        });
       }
 
-      let resizeTimer = 0;
-      let resizeSnapshot = null;
-
-      function handleOuterResize() {
-        /* Browser zoom/reset must never inherit inline card heights from the
-           previous zoom level. Clear them immediately before the new layout. */
-        resetEmbeddedResultSizing();
-
-        /* Browser zoom fires several resize events. Capture the position only
-           once at the start of the burst, then debounce the iframe resync. */
-        if (!resizeSnapshot) {
-          resizeSnapshot = { x: window.scrollX, y: window.scrollY };
-        }
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          const snapshot = resizeSnapshot;
-          resizeSnapshot = null;
-          refreshEmbeddedViewer(snapshot, true);
-        }, 90);
-      }
-
-      frame.addEventListener('load', () => {
-        refreshEmbeddedViewer({ x: window.scrollX, y: window.scrollY }, false);
-      });
-      /* Do not recompute iframe height on browser zoom/resize.
-         Ctrl+/Ctrl-/Ctrl+0 should only change browser scale, not Qualitative
-         document geometry. The iframe is sized during its initial load only. */
+      frame.addEventListener('load', refreshEmbeddedViewer);
       window.addEventListener('omnicad-themechange', syncEmbeddedTheme);
     })();
   </script>
