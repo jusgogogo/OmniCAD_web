@@ -26,9 +26,9 @@
     .layout { display: grid; grid-template-columns: 42.5% 57.5%; border: 2px solid var(--line); background: white; min-height: 690px; }
     .left { border-right: 2px solid var(--line); display: grid; grid-template-rows: minmax(450px, 1fr) 190px; min-width: 0; }
     .viewsarea { min-width:0; min-height:0; display:flex; flex-direction:column; background:white; }
-    .viewtitle { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 12px 0; margin:0; color:var(--ink); font-family:"Courier New",ui-monospace,monospace; }
-    .composite-view { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; padding:2px 4px 4px; background:white; overflow:hidden; }
-    .composite-view img { display:block; width:100%; height:100%; max-width:112%; max-height:112%; object-fit:contain; object-position:center; image-rendering:auto; border:0; outline:0; box-shadow:none; background:transparent; transform:scale(1.11); transform-origin:center center; }
+    .viewtitle { flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 12px 0; margin:0; color:var(--ink); font-family:"Courier New",ui-monospace,monospace; }
+    .composite-view { position:relative; flex:1 1 auto; min-width:0; min-height:0; background:white; overflow:hidden; contain:layout paint; }
+    .composite-view img { position:absolute; inset:0; margin:auto; display:block; width:100%; height:100%; max-width:none; max-height:none; object-fit:contain; object-position:center; image-rendering:auto; border:0; outline:0; box-shadow:none; background:transparent; transform:scale(1.11); transform-origin:50% 50%; }
     .libarea { border-top: 2px solid var(--line); padding: 9px 12px 10px; background: white; min-width: 0; }
     .libtitle { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0; padding:0 0 7px; color:var(--ink); font-family:"Courier New",ui-monospace,monospace; }
     .libtitle-main { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
@@ -39,16 +39,20 @@
     .libstrip::-webkit-scrollbar-thumb { background: #83b9c2; border: 2px solid #eaf5f6; border-radius: 999px; }
     .libpart { flex: 0 0 160px; height: 150px; background: linear-gradient(180deg, #ffffff 0%, #fbfdfd 100%); border: 1px solid rgba(157,203,210,0.72); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.85); }
     .results { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); align-self: stretch; }
-    .result { position: relative; min-height: 0; border-right: 2px solid var(--line); border-bottom: 2px solid var(--line); background: white; }
+    .result { position: relative; min-width:0; min-height:0; overflow:hidden; contain:layout paint; border-right: 2px solid var(--line); border-bottom: 2px solid var(--line); background: white; }
     .result:nth-child(4n) { border-right: 0; }
     .result:nth-child(n+5) { border-bottom: 0; }
     .model-badge { position:absolute; left:11px; top:11px; z-index:2; display:flex; flex-direction:column; align-items:flex-start; gap:4px; max-width:calc(100% - 22px); padding:7px 8px 6px; border:1px solid rgba(157,203,210,.95); background:rgba(255,255,255,.94); box-shadow:0 3px 12px rgba(41,75,83,.08); backdrop-filter:blur(4px); }
     .tag { display:block; max-width:100%; overflow:visible; text-overflow:clip; white-space:normal; color:#173746; font-size:9px; font-weight:900; letter-spacing:.045em; line-height:1.12; }
     .tag::after { display:none; }
     .partcount { display:inline-flex; align-items:center; flex:0 0 auto; padding:3px 5px 2px; border:1px solid rgba(157,203,210,.72); background:#f7ffff; color:#56808c; font-size:8px; font-weight:900; letter-spacing:.06em; line-height:1; }
-    .viewer { width: 100%; height: 100%; min-height: inherit; background: white; cursor: grab; }
-    .viewer canvas { width: 100%; height: 100%; display: block; }
-    .failed { height: 100%; min-height: inherit; display: flex; align-items: center; justify-content: center; text-align: center; font-size: clamp(20px, 1.65vw, 30px); letter-spacing: 3px; font-weight: 900; line-height: 1.25; }
+    .viewer { width:100%; height:100%; min-width:0; min-height:0; background:white; cursor:grab; }
+    .result > .viewer { position:absolute; inset:0; width:auto; height:auto; min-height:0; overflow:hidden; }
+    .result > .viewer canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+    .libpart.viewer { position:relative; overflow:hidden; }
+    .libpart.viewer canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+    .failed { height:100%; min-height:0; display:flex; align-items:center; justify-content:center; text-align:center; font-size:clamp(20px,1.65vw,30px); letter-spacing:3px; font-weight:900; line-height:1.25; }
+    .result > .failed { position:absolute; inset:0; width:auto; height:auto; }
     .failed.no-output { flex-direction: column; gap: 9px; }
     .failed-note { font-size: 9px; line-height: 1.35; letter-spacing: 1.15px; font-weight: 900; color: #6b8790; white-space: nowrap; }
     .case { display: none; }
@@ -208,10 +212,23 @@
       controls.autoRotateSpeed = 1.8;
       controls.enablePan = true;
 
+      let lastRenderWidth = 0;
+      let lastRenderHeight = 0;
+
       function resize() {
         const rect = el.getBoundingClientRect();
-        renderer.setSize(Math.max(1, rect.width), Math.max(1, rect.height), false);
-        camera.aspect = Math.max(1, rect.width) / Math.max(1, rect.height);
+        const width = Math.max(1, Math.round(rect.width));
+        const height = Math.max(1, Math.round(rect.height));
+
+        /* Browser zoom can emit several sub-pixel ResizeObserver callbacks.
+           Ignore identical/near-identical boxes so canvas backing-store changes
+           cannot become a layout feedback source. */
+        if (Math.abs(width - lastRenderWidth) < 1 && Math.abs(height - lastRenderHeight) < 1) return;
+        lastRenderWidth = width;
+        lastRenderHeight = height;
+
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
         camera.updateProjectionMatrix();
       }
 
