@@ -815,7 +815,13 @@
   /* Reload should start predictably instead of restoring a stale deep-page position. */
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.addEventListener('pageshow', () => {
-    if (!location.hash) window.scrollTo(0, 0);
+    if (!location.hash) {
+      const root = document.documentElement;
+      const previous = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+      window.scrollTo(0, 0);
+      root.style.scrollBehavior = previous;
+    }
   });
 </script>
 
@@ -1602,45 +1608,105 @@
         }
       }
 
-      function syncQualitativeHeight() {
+      function restoreOuterScrollInstantly(snapshot) {
+        if (!snapshot) return;
+        const root = document.documentElement;
+        const previousBehavior = root.style.scrollBehavior;
+        root.style.scrollBehavior = 'auto';
+        window.scrollTo(snapshot.x, snapshot.y);
+        root.style.scrollBehavior = previousBehavior;
+      }
+
+      function syncQualitativeHeight(scrollSnapshot) {
         try {
           const doc = frame.contentDocument || frame.contentWindow.document;
           if (!doc) return;
 
-          const keepX = window.scrollX;
-          const keepY = window.scrollY;
+          const snapshot = scrollSnapshot || { x: window.scrollX, y: window.scrollY };
           const h = Math.max(
             doc.documentElement ? doc.documentElement.scrollHeight : 0,
             doc.body ? doc.body.scrollHeight : 0,
             530
           );
 
-          frame.style.height = h + 'px';
+          /* Prevent the browser's own scroll anchoring from fighting the
+             explicit viewport preservation while iframe height changes. */
+          const root = document.documentElement;
+          const body = document.body;
+          const previousRootAnchor = root.style.overflowAnchor;
+          const previousBodyAnchor = body.style.overflowAnchor;
+          root.style.overflowAnchor = 'none';
+          body.style.overflowAnchor = 'none';
+
+          const currentFrameHeight = parseFloat(frame.style.height) || frame.getBoundingClientRect().height || 0;
+          if (Math.abs(currentFrameHeight - h) > 1) {
+            frame.style.height = h + 'px';
+          }
           if (wrap) {
-            wrap.style.height = h + 'px';
-            wrap.style.minHeight = h + 'px';
+            const currentWrapHeight = parseFloat(wrap.style.height) || wrap.getBoundingClientRect().height || 0;
+            if (Math.abs(currentWrapHeight - h) > 1) {
+              wrap.style.height = h + 'px';
+              wrap.style.minHeight = h + 'px';
+            }
           }
 
-          /* Changing iframe height must not move the outer document viewport. */
-          requestAnimationFrame(() => window.scrollTo(keepX, keepY));
+          /* html uses smooth scrolling for navigation, so viewport restoration
+             must explicitly be instant or zoom/resize looks like auto-scrolling. */
+          requestAnimationFrame(() => {
+            restoreOuterScrollInstantly(snapshot);
+            requestAnimationFrame(() => {
+              root.style.overflowAnchor = previousRootAnchor;
+              body.style.overflowAnchor = previousBodyAnchor;
+            });
+          });
         } catch (e) {
           /* CSS fallback dimensions remain active. */
         }
       }
 
-      function refreshEmbeddedViewer() {
+      function refreshEmbeddedViewer(scrollSnapshot, resizeOnly = false) {
         installViewerOverrides();
         installEmbeddedRasterObserver();
         syncEmbeddedTheme();
         syncEmbeddedRasterBackgrounds();
-        requestAnimationFrame(syncQualitativeHeight);
-        setTimeout(syncQualitativeHeight, 120);
-        setTimeout(syncQualitativeHeight, 500);
-        setTimeout(syncQualitativeHeight, 1200);
+
+        const snapshot = scrollSnapshot || { x: window.scrollX, y: window.scrollY };
+
+        requestAnimationFrame(() => syncQualitativeHeight(snapshot));
+
+        if (resizeOnly) {
+          /* One late pass is enough for responsive child-layout changes.
+             Reuse the SAME snapshot so scroll position cannot drift. */
+          setTimeout(() => syncQualitativeHeight(snapshot), 160);
+        } else {
+          /* Initial iframe load can include asynchronous model/layout work. */
+          setTimeout(() => syncQualitativeHeight(snapshot), 120);
+          setTimeout(() => syncQualitativeHeight(snapshot), 500);
+          setTimeout(() => syncQualitativeHeight(snapshot), 1200);
+        }
       }
 
-      frame.addEventListener('load', refreshEmbeddedViewer);
-      window.addEventListener('resize', refreshEmbeddedViewer, {passive:true});
+      let resizeTimer = 0;
+      let resizeSnapshot = null;
+
+      function handleOuterResize() {
+        /* Browser zoom fires several resize events. Capture the position only
+           once at the start of the burst, then debounce the iframe resync. */
+        if (!resizeSnapshot) {
+          resizeSnapshot = { x: window.scrollX, y: window.scrollY };
+        }
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const snapshot = resizeSnapshot;
+          resizeSnapshot = null;
+          refreshEmbeddedViewer(snapshot, true);
+        }, 90);
+      }
+
+      frame.addEventListener('load', () => {
+        refreshEmbeddedViewer({ x: window.scrollX, y: window.scrollY }, false);
+      });
+      window.addEventListener('resize', handleOuterResize, {passive:true});
       window.addEventListener('omnicad-themechange', syncEmbeddedTheme);
     })();
   </script>
