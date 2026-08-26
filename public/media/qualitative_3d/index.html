@@ -38,7 +38,7 @@
     .libstrip::-webkit-scrollbar-track { background: #eaf5f6; border: 1px solid rgba(157,203,210,0.55); }
     .libstrip::-webkit-scrollbar-thumb { background: #83b9c2; border: 2px solid #eaf5f6; border-radius: 999px; }
     .libpart { flex: 0 0 160px; height: 150px; background: linear-gradient(180deg, #ffffff 0%, #fbfdfd 100%); border: 1px solid rgba(157,203,210,0.72); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.85); }
-    .results { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); align-self: stretch; height: 100%; }
+    .results { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); align-self: stretch; }
     .result { position: relative; min-height: 0; border-right: 2px solid var(--line); border-bottom: 2px solid var(--line); background: white; }
     .result:nth-child(4n) { border-right: 0; }
     .result:nth-child(n+5) { border-bottom: 0; }
@@ -266,35 +266,20 @@
       animate();
     }
 
-    function syncActiveLayout() {
-      const caseEl = document.querySelector(`.case[data-case="${active}"]`);
-      if (!caseEl) return;
-      const left = caseEl.querySelector('.left');
-      const results = caseEl.querySelector('.results');
-      if (!left || !results) return;
-
-      if (window.innerWidth <= 1100) {
-        results.style.height = '';
-        results.querySelectorAll('.result').forEach((card) => {
-          card.style.height = '';
-          card.style.minHeight = '';
-        });
-        results.querySelectorAll('.viewer, .failed').forEach((node) => {
-          node.style.minHeight = '';
-        });
-        return;
-      }
-
-      const leftHeight = Math.ceil(left.getBoundingClientRect().height);
-      const rowHeight = Math.max(220, Math.floor((leftHeight - 2) / 2));
-
-      results.style.height = `${leftHeight}px`;
-      results.querySelectorAll('.result').forEach((card) => {
-        card.style.height = `${rowHeight}px`;
-        card.style.minHeight = `${rowHeight}px`;
+    function clearLegacyResultSizing() {
+      /* Right-side sizing is CSS-driven now. Never retain inline heights across
+         browser zoom/reset; stale inline heights were what prevented Ctrl+0
+         from restoring the Qualitative section to its original geometry. */
+      document.querySelectorAll('.results').forEach((results) => {
+        results.style.removeProperty('height');
       });
-      results.querySelectorAll('.viewer, .failed').forEach((node) => {
-        node.style.minHeight = `${rowHeight}px`;
+      document.querySelectorAll('.result').forEach((card) => {
+        card.style.removeProperty('height');
+        card.style.removeProperty('min-height');
+      });
+      document.querySelectorAll('.result .viewer, .result .failed').forEach((node) => {
+        node.style.removeProperty('height');
+        node.style.removeProperty('min-height');
       });
     }
 
@@ -302,16 +287,14 @@
       active = (next + manifest.samples.length) % manifest.samples.length;
       document.querySelectorAll('.case').forEach((el, idx) => el.classList.toggle('active', idx === active));
       document.getElementById('caseCount').textContent = `${String(active + 1).padStart(2, '0')} / ${String(manifest.samples.length).padStart(2, '0')}`;
+      clearLegacyResultSizing();
       requestAnimationFrame(() => {
         const activeCase = document.querySelector(`.case[data-case="${active}"]`);
         activeCase.querySelectorAll('.viewer').forEach(initViewer);
-        syncActiveLayout();
-        requestAnimationFrame(syncActiveLayout);
       });
     }
 
     buildCases();
-    window.addEventListener('resize', () => requestAnimationFrame(syncActiveLayout));
     document.getElementById('prevCase').addEventListener('click', () => showCase(active - 1));
     document.getElementById('nextCase').addEventListener('click', () => showCase(active + 1));
     window.addEventListener('keydown', (event) => {
