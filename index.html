@@ -882,7 +882,7 @@
         <div class="qualitative-3d-wrap">
           <iframe
             id="qualitative3dFrame"
-            src="./public/media/qualitative_3d/index.html?v=reference-scale-v13"
+            src="./public/media/qualitative_3d/index.html?v=reference-unified-v14"
             title="OmniCAD interactive qualitative assembly examples"
             loading="eager"
             scrolling="no"
@@ -1521,15 +1521,13 @@
                 transform-origin:50% 50%!important;
               }
               /* Per-case reference-image scale only. */
+              /* Cases 02-06 use the same reference-image fit/scale. */
               .case.case-02 .composite-view img,
-              .case.case-04 .composite-view img{
-                transform:scale(1.20)!important;
-              }
-              .case.case-03 .composite-view img{
-                transform:scale(1.07)!important;
-              }
+              .case.case-03 .composite-view img,
+              .case.case-04 .composite-view img,
+              .case.case-05 .composite-view img,
               .case.case-06 .composite-view img{
-                transform:scale(1.06)!important;
+                transform:scale(1.03)!important;
               }
 
               /* Bright-mode Case 05 only: its standalone page intentionally
