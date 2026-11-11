@@ -53,9 +53,7 @@
         "gemini31": "models/case-01_gemini31.glb",
         "gemini25": "models/case-01_gemini25.glb",
         "qwen37": "models/case-01_qwen37.glb",
-        "qwen35": null,
-        "fable52": "models/case-01_fable52.glb",
-        "astra6": "models/case-01_astra6.glb"
+        "qwen35": null
       },
       "part_counts": {
         "gt": 10,
@@ -63,9 +61,7 @@
         "claude48": 7,
         "gemini31": 7,
         "gemini25": 7,
-        "qwen37": 7,
-        "fable52": 10,
-        "astra6": 10
+        "qwen37": 7
       }
     },
     {
@@ -129,9 +125,7 @@
         "gemini31": "models/case-02_gemini31.glb",
         "gemini25": "models/case-02_gemini25.glb",
         "qwen37": "models/case-02_qwen37.glb",
-        "qwen35": null,
-        "fable52": "models/case-02_fable52.glb",
-        "astra6": "models/case-02_astra6.glb"
+        "qwen35": null
       },
       "part_counts": {
         "gt": 10,
@@ -140,9 +134,7 @@
         "claude48": 10,
         "gemini31": 9,
         "gemini25": 9,
-        "qwen37": 9,
-        "fable52": 10,
-        "astra6": 10
+        "qwen37": 9
       }
     },
     {
@@ -198,18 +190,14 @@
         "gemini31": "models/case-03_gemini31.glb",
         "gemini25": "models/case-03_gemini25.glb",
         "qwen37": null,
-        "qwen35": null,
-        "fable52": "models/case-03_fable52.glb",
-        "astra6": "models/case-03_astra6.glb"
+        "qwen35": null
       },
       "part_counts": {
         "gt": 25,
         "gpt55": 23,
         "claude48": 7,
         "gemini31": 13,
-        "gemini25": 7,
-        "fable52": 25,
-        "astra6": 25
+        "gemini25": 7
       }
     },
     {
@@ -269,9 +257,7 @@
         "gemini31": "models/case-04_gemini31.glb",
         "gemini25": "models/case-04_gemini25.glb",
         "qwen37": "models/case-04_qwen37.glb",
-        "qwen35": null,
-        "fable52": "models/case-04_fable52.glb",
-        "astra6": "models/case-04_astra6.glb"
+        "qwen35": null
       },
       "part_counts": {
         "gt": 11,
@@ -280,9 +266,7 @@
         "claude48": 8,
         "gemini31": 8,
         "gemini25": 8,
-        "qwen37": 8,
-        "fable52": 11,
-        "astra6": 11
+        "qwen37": 8
       }
     },
     {
@@ -362,16 +346,12 @@
         "gemini31": null,
         "gemini25": "models/case-05_gemini25.glb",
         "qwen37": null,
-        "qwen35": null,
-        "fable52": "models/case-05_fable52.glb",
-        "astra6": "models/case-05_astra6.glb"
+        "qwen35": null
       },
       "part_counts": {
         "gt": 39,
         "claude48": 26,
-        "gemini25": 13,
-        "fable52": 35,
-        "astra6": 36
+        "gemini25": 13
       }
     },
     {
@@ -415,9 +395,7 @@
         "gemini31": "models/case-06_gemini31.glb",
         "gemini25": "models/case-06_gemini25.glb",
         "qwen37": null,
-        "qwen35": null,
-        "fable52": "models/case-06_fable52.glb",
-        "astra6": "models/case-06_astra6.glb"
+        "qwen35": null
       },
       "part_counts": {
         "gt": 12,
@@ -425,9 +403,7 @@
         "gpt54mini": 4,
         "claude48": 8,
         "gemini31": 13,
-        "gemini25": 16,
-        "fable52": 14,
-        "astra6": 12
+        "gemini25": 16
       }
     }
   ]

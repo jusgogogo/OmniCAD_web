@@ -52,9 +52,7 @@ const MODEL_LABELS = {
   gemini31: 'Gemini 3.1 Pro',
   gemini25: 'Gemini 2.5 Flash',
   qwen37: 'Qwen 3.7 Plus',
-  qwen35: 'Qwen 3.5 9B',
-  fable52: 'Claude Fable 5.2',
-  astra6: 'GPT-6 Astra'
+  qwen35: 'Qwen 3.5 9B'
 };
 
 const VIEW_DIRS = {
@@ -736,4 +734,3 @@ async function boot() {
 }
 
 boot();
-
